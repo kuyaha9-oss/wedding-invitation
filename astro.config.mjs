@@ -7,6 +7,9 @@ import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   site: "https://wedding.zedlabs.id",
+  security: {
+    checkOrigin: false,
+  },
   integrations: [react(), sitemap()],
   output: "server",
   adapter: node({

@@ -361,6 +361,15 @@ const Field = ({
 const inputClass =
   "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition-all outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white";
 
+const readJsonResponse = async (res: Response) => {
+  const text = await res.text();
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch {
+    return { error: text || `HTTP ${res.status}` };
+  }
+};
+
 const Section = ({
   title,
   icon: Icon,
@@ -405,7 +414,7 @@ const UploadInput = ({
         body,
         credentials: "include",
       });
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.error || "Upload gagal");
       onChange(data.url);
     } catch (error) {
@@ -646,7 +655,11 @@ const SettingsTab: React.FC = () => {
                   body.append("file", file);
                   body.append("kind", "image");
                   const res = await fetch("/api/upload", { method: "POST", body, credentials: "include" });
-                  const data = await res.json();
+                  const data = await readJsonResponse(res);
+                  if (!res.ok) {
+                    alert(data.error || "Upload gagal");
+                    continue;
+                  }
                   if (res.ok) setGallery((items) => [...items, data.url]);
                 }
               }}
