@@ -95,5 +95,15 @@ export function parseConfig(raw: Record<string, string>): AppConfig {
       botToken: raw.TELEGRAM_BOT_TOKEN ?? "",
       chatId: raw.TELEGRAM_CHAT_ID ?? "",
     },
+    theme: {
+      primary: raw.THEME_PRIMARY ?? "#0f172a",
+      accent: raw.THEME_ACCENT ?? "#7dd3fc",
+      background: raw.THEME_BACKGROUND ?? "#fafaf9",
+      darkDefault: raw.THEME_DARK_DEFAULT === "true",
+      fontStyle:
+        raw.THEME_FONT_STYLE === "modern" || raw.THEME_FONT_STYLE === "romantic"
+          ? raw.THEME_FONT_STYLE
+          : "classic",
+    },
   };
 }

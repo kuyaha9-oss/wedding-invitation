@@ -63,7 +63,7 @@ export function useConfig() {
 
   useEffect(() => {
     if (cache) return;
-    fetch("/api/config")
+    fetch("/api/config", { cache: "no-store" })
       .then((r) => r.json())
       .then((data: Record<string, string>) => {
         const parsed = parseConfig(data);

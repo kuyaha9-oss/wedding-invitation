@@ -78,6 +78,13 @@ export interface AppConfig {
     botToken: string;
     chatId: string;
   };
+  theme: {
+    primary: string;
+    accent: string;
+    background: string;
+    darkDefault: boolean;
+    fontStyle: "classic" | "modern" | "romantic";
+  };
 }
 
 export interface WeddingEvent {

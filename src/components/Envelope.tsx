@@ -5,19 +5,24 @@ import type { AppConfig } from "../types";
 interface EnvelopeProps {
   onOpen: () => void;
   config: AppConfig;
+  initialGuestName?: string;
 }
 
-const Envelope: React.FC<EnvelopeProps> = ({ onOpen, config }) => {
+const Envelope: React.FC<EnvelopeProps> = ({
+  onOpen,
+  config,
+  initialGuestName,
+}) => {
   const [guestName, setGuestName] = useState<string>("");
   const [isAnimate, setIsAnimate] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const to = params.get("to");
+    const to = initialGuestName || params.get("to");
     if (to) setGuestName(to);
     setTimeout(() => setIsAnimate(true), 300);
-  }, []);
+  }, [initialGuestName]);
 
   const handleOpenClick = () => {
     setIsExiting(true);
@@ -34,7 +39,7 @@ const Envelope: React.FC<EnvelopeProps> = ({ onOpen, config }) => {
     >
       <div className="absolute inset-0 scale-110">
         <img
-          src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop"
+          src={config.hero.image}
           className="animate-subtle-zoom h-full w-full object-cover opacity-30"
           alt="Wedding Backdrop"
         />

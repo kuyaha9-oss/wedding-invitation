@@ -2,9 +2,8 @@
 import { CheckCircle2, HelpCircle, LogOut, Users, XCircle } from "lucide-react";
 import AdminDashboard from "../components/Admin/AdminDashboard";
 import Layout from "../layouts/Layout.astro";
-import db from "../lib/db";
+import db, { getAdminUsername, verifyAdmin } from "../lib/db";
 
-const ADMIN_PASSWORD = import.meta.env.ADMIN_PASSWORD || "P@ssw0rd";
 const COOKIE_NAME = "wedding_admin_auth";
 
 if (Astro.request.method === "POST") {
@@ -15,8 +14,9 @@ if (Astro.request.method === "POST") {
     const action = body.action;
 
     if (action === "login") {
-      const credential = body.credential?.toString();
-      if (credential === ADMIN_PASSWORD) {
+      const username = body.username?.toString() || getAdminUsername();
+      const password = (body.password ?? body.credential)?.toString();
+      if (password && verifyAdmin(username, password)) {
         Astro.cookies.set(COOKIE_NAME, "true", {
           path: "/",
           httpOnly: true,
@@ -87,11 +87,19 @@ if (isAuthenticated) {
             </div>
             <div class="mt-8 space-y-6">
               <input
-                id="admin-credential"
+                id="admin-username"
+                type="text"
+                autocomplete="username"
+                class="block w-full rounded-lg border border-slate-300 bg-slate-50 p-4 text-slate-900 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+                placeholder="Username"
+                value="admin"
+              />
+              <input
+                id="admin-password"
                 type="password"
                 autocomplete="current-password"
                 class="block w-full rounded-lg border border-slate-300 bg-slate-50 p-4 text-slate-900 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
-                placeholder="Masukkan akses kunci..."
+                placeholder="Password"
               />
               <button
                 id="login-btn"
@@ -181,7 +189,7 @@ if (isAuthenticated) {
             client:load
             initialRsvps={rsvps}
             initialWishes={wishes}
-            siteUrl={Astro.site?.toString() || "https://wedding.zedlabs.id"}
+            siteUrl={Astro.url.origin}
           />
         </div>
       )
@@ -191,15 +199,19 @@ if (isAuthenticated) {
   <script>
 
     const loginBtn = document.getElementById("login-btn");
-    const credentialInput = document.getElementById(
-      "admin-credential"
+    const usernameInput = document.getElementById(
+      "admin-username"
+    ) as HTMLInputElement;
+    const passwordInput = document.getElementById(
+      "admin-password"
     ) as HTMLInputElement;
     const loginError = document.getElementById("login-error");
 
-    if (loginBtn && credentialInput) {
+    if (loginBtn && usernameInput && passwordInput) {
       const doLogin = async () => {
-        const val = credentialInput.value;
-        if (!val) return;
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        if (!username || !password) return;
 
         loginBtn.textContent = "Memverifikasi...";
         loginBtn.setAttribute("disabled", "true");
@@ -208,7 +220,7 @@ if (isAuthenticated) {
           const res = await fetch("/admin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "login", credential: val }),
+            body: JSON.stringify({ action: "login", username, password }),
           });
 
           if (res.ok) {
@@ -226,7 +238,7 @@ if (isAuthenticated) {
       };
 
       loginBtn.addEventListener("click", doLogin);
-      credentialInput.addEventListener("keydown", (e) => {
+      passwordInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") doLogin();
       });
     }

@@ -11,7 +11,10 @@ import {
   Check,
 } from "lucide-react";
 
-const Wishes: React.FC<{ config: AppConfig }> = ({ config: _config }) => {
+const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
+  config: _config,
+  initialGuestName,
+}) => {
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const wishesPerPage = 6;
@@ -24,12 +27,12 @@ const Wishes: React.FC<{ config: AppConfig }> = ({ config: _config }) => {
   useEffect(() => {
     loadWishes();
     const params = new URLSearchParams(window.location.search);
-    const to = params.get("to");
+    const to = initialGuestName || params.get("to");
     if (to) {
       setName(to);
       setIsNameLocked(true);
     }
-  }, []);
+  }, [initialGuestName]);
 
   const loadWishes = async () => {
     const data = await dbService.getWishes();

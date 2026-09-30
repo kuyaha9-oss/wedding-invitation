@@ -12,7 +12,10 @@ import {
 import { dbService } from "../services/dbService";
 import { AttendanceStatus, type RSVP, type AppConfig } from "../types";
 
-const RSVPForm: React.FC<{ config: AppConfig }> = ({ config }) => {
+const RSVPForm: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
+  config,
+  initialGuestName,
+}) => {
   const [formData, setFormData] = useState({
     guest_name: "",
     phone: "",
@@ -34,13 +37,13 @@ const RSVPForm: React.FC<{ config: AppConfig }> = ({ config }) => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const to = params.get("to");
+    const to = initialGuestName || params.get("to");
     if (to) {
       setFormData((prev) => ({ ...prev, guest_name: to }));
       setIsNameLocked(true);
     }
     loadRSVPs();
-  }, []);
+  }, [initialGuestName]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

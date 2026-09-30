@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getConfig } from "../../../lib/db";
+import { getAdminUsername, getConfig } from "../../../lib/db";
 
 export const GET: APIRoute = async ({ cookies }) => {
   const auth = cookies.get("wedding_admin_auth")?.value;
@@ -9,10 +9,13 @@ export const GET: APIRoute = async ({ cookies }) => {
     });
   }
   try {
-    const config = getConfig();
+    const config = { ...getConfig(), ADMIN_USERNAME: getAdminUsername() };
     return new Response(JSON.stringify(config), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+      },
     });
   } catch {
     return new Response(JSON.stringify({ error: "Failed" }), { status: 500 });

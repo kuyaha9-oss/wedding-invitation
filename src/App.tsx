@@ -8,14 +8,13 @@ import RSVPForm from "./components/RSVPForm";
 import Wishes from "./components/Wishes";
 import GiftInfo from "./components/GiftInfo";
 import MusicPlayer from "./components/MusicPlayer";
-import Navbar from "./components/Navbar";
 import FloatingPetals from "./components/FloatingPetals";
 import Envelope from "./components/Envelope";
 import InstallPrompt from "./components/InstallPrompt";
 import { useConfig } from "./hooks/useConfig";
 import { Heart, Quote, ChevronUp } from "lucide-react";
 
-const App: React.FC = () => {
+const App: React.FC<{ initialGuestName?: string }> = ({ initialGuestName }) => {
   const { config, loading } = useConfig();
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -40,6 +39,19 @@ const App: React.FC = () => {
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (!config) return;
+    const root = document.documentElement;
+    root.style.setProperty("--color-primary", config.theme.primary);
+    root.style.setProperty("--color-accent", config.theme.accent);
+    root.style.setProperty("--color-accentDark", config.theme.primary);
+    root.style.setProperty("--color-secondary", config.theme.background);
+    root.dataset.fontStyle = config.theme.fontStyle;
+    if (!localStorage.getItem("theme") && config.theme.darkDefault) {
+      setTheme("dark");
+    }
+  }, [config]);
 
   useEffect(() => {
     if (!isOpened) {
@@ -77,10 +89,6 @@ const App: React.FC = () => {
     return () => observer.disconnect();
   }, [isOpened]);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
-
   const handleOpenInvitation = () => {
     setIsOpened(true);
     window.dispatchEvent(new CustomEvent("play-wedding-music"));
@@ -109,25 +117,29 @@ const App: React.FC = () => {
 
   return (
     <div className="selection:bg-accent/30 selection:text-primary relative min-h-screen overflow-x-hidden">
-      {!isOpened && <Envelope onOpen={handleOpenInvitation} config={config} />}
+      {!isOpened && (
+        <Envelope
+          onOpen={handleOpenInvitation}
+          config={config}
+          initialGuestName={initialGuestName}
+        />
+      )}
 
       <InstallPrompt />
       <FloatingPetals />
-      <Hero config={config} />
+      <Hero config={config} initialGuestName={initialGuestName} />
 
       <main className="relative z-10 space-y-0">
         <CoupleProfile config={config} />
         <LoveStory config={config} />
         <EventDetails config={config} />
         <Gallery config={config} />
-        <RSVPForm config={config} />
-        <Wishes config={config} />
+        <RSVPForm config={config} initialGuestName={initialGuestName} />
+        <Wishes config={config} initialGuestName={initialGuestName} />
         <GiftInfo config={config} />
       </main>
 
       <MusicPlayer url={config.music.url} />
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-
       <footer className="dark:bg-darkSurface relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-white px-6 transition-colors duration-1000">
         <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-10 dark:opacity-[0.05]">
           <Heart className="animate-pulse-soft h-[85vw] w-[85vw] stroke-[0.3]" />

@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getConfig, setConfig } from "../../lib/db";
+import { getConfig, setConfig, updateAdminCredentials } from "../../lib/db";
 
 export const GET: APIRoute = async () => {
   try {
@@ -9,7 +9,10 @@ export const GET: APIRoute = async () => {
     delete safeConfig.TELEGRAM_CHAT_ID;
     return new Response(JSON.stringify(safeConfig), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+      },
     });
   } catch {
     return new Response(JSON.stringify({ error: "Failed to fetch config" }), {
@@ -28,6 +31,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   try {
     const body = await request.json();
+    if (typeof body.ADMIN_USERNAME === "string") {
+      updateAdminCredentials(
+        body.ADMIN_USERNAME,
+        typeof body.ADMIN_PASSWORD_NEW === "string" &&
+          body.ADMIN_PASSWORD_NEW.trim()
+          ? body.ADMIN_PASSWORD_NEW
+          : undefined
+      );
+      delete body.ADMIN_USERNAME;
+      delete body.ADMIN_PASSWORD_NEW;
+    }
     for (const [key, value] of Object.entries(body)) {
       if (typeof value === "string") {
         setConfig(key, value);
@@ -35,7 +49,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         setConfig(key, JSON.stringify(value));
       }
     }
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { "Cache-Control": "no-store" },
+    });
   } catch {
     return new Response(JSON.stringify({ error: "Failed to save config" }), {
       status: 500,

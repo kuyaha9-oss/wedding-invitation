@@ -1,16 +1,24 @@
 import {
   ChevronLeft,
   ChevronRight,
+  Copy,
   Download,
   Edit,
+  FileArchive,
+  Image as ImageIcon,
   Loader2,
   MessageCircle,
+  Music,
+  Palette,
+  Plus,
   Printer,
   QrCode,
   Save,
   Search,
   Settings,
   Trash2,
+  Upload,
+  UserPlus,
   Users,
   X,
 } from "lucide-react";
@@ -273,247 +281,188 @@ const DataTable = <T extends { id: number }>({
   );
 };
 
-interface ConfigField {
-  key: string;
-  label: string;
-  type: "text" | "textarea" | "url" | "number" | "json";
-  placeholder?: string;
-}
+type BankAccount = { bank: string; number: string; name: string };
+type StoryItem = { date: string; title: string; desc: string };
+type Guest = {
+  id: number;
+  name: string;
+  slug: string;
+  phone?: string;
+  address?: string;
+  notes?: string;
+  created_at: string;
+};
 
-const CONFIG_SECTIONS: { title: string; fields: ConfigField[] }[] = [
-  {
-    title: "Mempelai Wanita",
-    fields: [
-      { key: "BRIDE_NICKNAME", label: "Nama Panggilan", type: "text" },
-      { key: "BRIDE_FULLNAME", label: "Nama Lengkap", type: "text" },
-      { key: "BRIDE_PARENTS", label: "Nama Orang Tua", type: "text" },
-      { key: "BRIDE_INSTAGRAM", label: "Instagram (tanpa @)", type: "text" },
-      { key: "BRIDE_IMAGE", label: "URL Foto", type: "url" },
-    ],
-  },
-  {
-    title: "Mempelai Pria",
-    fields: [
-      { key: "GROOM_NICKNAME", label: "Nama Panggilan", type: "text" },
-      { key: "GROOM_FULLNAME", label: "Nama Lengkap", type: "text" },
-      { key: "GROOM_PARENTS", label: "Nama Orang Tua", type: "text" },
-      { key: "GROOM_INSTAGRAM", label: "Instagram (tanpa @)", type: "text" },
-      { key: "GROOM_IMAGE", label: "URL Foto", type: "url" },
-    ],
-  },
-  {
-    title: "Venue",
-    fields: [
-      { key: "VENUE_NAME", label: "Nama Gedung", type: "text" },
-      { key: "VENUE_ADDRESS", label: "Alamat Lengkap", type: "textarea" },
-      {
-        key: "VENUE_LAT",
-        label: "Latitude",
-        type: "text",
-        placeholder: "-6.3032707",
-      },
-      {
-        key: "VENUE_LNG",
-        label: "Longitude",
-        type: "text",
-        placeholder: "106.1011039",
-      },
-    ],
-  },
-  {
-    title: "Akad Nikah",
-    fields: [
-      { key: "AKAD_TITLE", label: "Judul", type: "text" },
-      { key: "AKAD_DAY", label: "Hari", type: "text", placeholder: "Minggu" },
-      {
-        key: "AKAD_DATE",
-        label: "Tanggal",
-        type: "text",
-        placeholder: "11 Oktober 2025",
-      },
-      {
-        key: "AKAD_START",
-        label: "Jam Mulai",
-        type: "text",
-        placeholder: "08:00",
-      },
-      {
-        key: "AKAD_END",
-        label: "Jam Selesai",
-        type: "text",
-        placeholder: "10:00",
-      },
-      {
-        key: "AKAD_ISO_START",
-        label: "ISO Start",
-        type: "text",
-        placeholder: "2025-10-11T08:00:00+07:00",
-      },
-      {
-        key: "AKAD_ISO_END",
-        label: "ISO End",
-        type: "text",
-        placeholder: "2025-10-11T10:00:00+07:00",
-      },
-    ],
-  },
-  {
-    title: "Resepsi",
-    fields: [
-      { key: "RESEPSI_TITLE", label: "Judul", type: "text" },
-      {
-        key: "RESEPSI_DAY",
-        label: "Hari",
-        type: "text",
-        placeholder: "Minggu",
-      },
-      {
-        key: "RESEPSI_DATE",
-        label: "Tanggal",
-        type: "text",
-        placeholder: "11 Oktober 2025",
-      },
-      {
-        key: "RESEPSI_START",
-        label: "Jam Mulai",
-        type: "text",
-        placeholder: "11:00",
-      },
-      {
-        key: "RESEPSI_END",
-        label: "Jam Selesai",
-        type: "text",
-        placeholder: "14:00",
-      },
-      {
-        key: "RESEPSI_ISO_START",
-        label: "ISO Start",
-        type: "text",
-        placeholder: "2025-10-11T11:00:00+07:00",
-      },
-      {
-        key: "RESEPSI_ISO_END",
-        label: "ISO End",
-        type: "text",
-        placeholder: "2025-10-11T14:00:00+07:00",
-      },
-    ],
-  },
-  {
-    title: "Hero & Media",
-    fields: [
-      { key: "HERO_IMAGE", label: "URL Gambar Hero", type: "url" },
-      {
-        key: "HERO_CITY",
-        label: "Kota",
-        type: "text",
-        placeholder: "Kab. Pandeglang, Banten",
-      },
-      { key: "MUSIC_URL", label: "URL Musik (MP3)", type: "url" },
-      {
-        key: "RSVP_MAX_GUESTS",
-        label: "Maks Tamu per RSVP",
-        type: "number",
-        placeholder: "20",
-      },
-    ],
-  },
-  {
-    title: "Teks & Konten",
-    fields: [
-      { key: "TEXT_SALAM_OPENING", label: "Salam Pembuka", type: "text" },
-      { key: "TEXT_QUOTE_AR_RUM", label: "Kutipan Ar-Rum", type: "textarea" },
-      {
-        key: "TEXT_QUOTE_SOURCE",
-        label: "Sumber Kutipan",
-        type: "text",
-        placeholder: "QS. Ar-Rum: 21",
-      },
-      { key: "TEXT_INVITATION", label: "Kalimat Undangan", type: "textarea" },
-      { key: "TEXT_CLOSING", label: "Teks Penutup", type: "textarea" },
-      { key: "TEXT_SALAM_CLOSING", label: "Salam Penutup", type: "text" },
-      {
-        key: "TEXT_SIGNATURE",
-        label: "Tanda Tangan",
-        type: "text",
-        placeholder: "Kami yang berbahagia,",
-      },
-      {
-        key: "TEXT_FAMILY",
-        label: "Nama Keluarga",
-        type: "text",
-        placeholder: "Kel. Bpk ... & Kel. Bpk ...",
-      },
-      {
-        key: "TEXT_GIFT_TITLE",
-        label: "Judul Hadiah",
-        type: "text",
-        placeholder: "Tanda Kasih",
-      },
-      { key: "TEXT_GIFT_DESC", label: "Deskripsi Hadiah", type: "textarea" },
-    ],
-  },
-  {
-    title: "Rekening Bank",
-    fields: [
-      {
-        key: "BANK_ACCOUNTS",
-        label: 'JSON Array [{"bank":"...","number":"...","name":"..."}]',
-        type: "json",
-      },
-    ],
-  },
-  {
-    title: "Kisah Cinta",
-    fields: [
-      {
-        key: "LOVE_STORY",
-        label: 'JSON Array [{"date":"...","title":"...","desc":"..."}]',
-        type: "json",
-      },
-    ],
-  },
-  {
-    title: "Galeri",
-    fields: [
-      {
-        key: "GALLERY_IMAGES",
-        label: 'JSON Array ["url1","url2",...]',
-        type: "json",
-      },
-    ],
-  },
-  {
-    title: "Notifikasi Telegram",
-    fields: [
-      {
-        key: "TELEGRAM_BOT_TOKEN",
-        label: "Bot Token",
-        type: "text",
-        placeholder: "123456:ABC...",
-      },
-      {
-        key: "TELEGRAM_CHAT_ID",
-        label: "Chat ID",
-        type: "text",
-        placeholder: "7671009829",
-      },
-    ],
-  },
-];
+const parseJson = <T,>(value: string | undefined, fallback: T): T => {
+  try {
+    return value ? (JSON.parse(value) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const isoToInput = (value?: string) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const offset = date.getTimezoneOffset();
+  const local = new Date(date.getTime() - offset * 60000);
+  return local.toISOString().slice(0, 16);
+};
+
+const eventPatch = (prefix: "AKAD" | "RESEPSI", start: string, end: string) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end || start);
+  const id = new Intl.DateTimeFormat("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  return {
+    [`${prefix}_DAY`]: new Intl.DateTimeFormat("id-ID", {
+      weekday: "long",
+    }).format(startDate),
+    [`${prefix}_DATE`]: id
+      .format(startDate)
+      .replace(/^[^,]+,\s*/, ""),
+    [`${prefix}_START`]: startDate.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }),
+    [`${prefix}_END`]: endDate.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }),
+    [`${prefix}_ISO_START`]: startDate.toISOString(),
+    [`${prefix}_ISO_END`]: endDate.toISOString(),
+  };
+};
+
+const Field = ({
+  label,
+  children,
+  wide = false,
+}: {
+  label: string;
+  children: React.ReactNode;
+  wide?: boolean;
+}) => (
+  <label className={wide ? "space-y-1.5 md:col-span-2" : "space-y-1.5"}>
+    <span className="block text-[11px] font-bold tracking-widest text-slate-400 uppercase dark:text-slate-500">
+      {label}
+    </span>
+    {children}
+  </label>
+);
+
+const inputClass =
+  "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition-all outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white";
+
+const Section = ({
+  title,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+}) => (
+  <section className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800">
+    <div className="mb-6 flex items-center gap-3">
+      <Icon className="h-5 w-5 text-blue-600" />
+      <h3 className="font-serif text-lg font-bold text-slate-800 italic dark:text-white">
+        {title}
+      </h3>
+    </div>
+    {children}
+  </section>
+);
+
+const UploadInput = ({
+  label,
+  value,
+  kind,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  kind: "image" | "audio";
+  onChange: (value: string) => void;
+}) => {
+  const [uploading, setUploading] = useState(false);
+  const upload = async (file?: File) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("kind", kind);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body,
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload gagal");
+      onChange(data.url);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Upload gagal");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <Field label={label} wide>
+      <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={inputClass}
+          placeholder={kind === "audio" ? "/uploads/audio/music.mp3" : "/uploads/images/foto.webp"}
+        />
+        <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800">
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+          Upload
+          <input
+            type="file"
+            className="hidden"
+            accept={kind === "audio" ? "audio/*" : "image/*"}
+            onChange={(e) => upload(e.target.files?.[0])}
+          />
+        </label>
+      </div>
+      {value && kind === "image" && (
+        <img src={value} alt={label} className="mt-3 h-32 w-full rounded-lg object-cover" />
+      )}
+      {value && kind === "audio" && (
+        <audio src={value} controls className="mt-3 w-full" />
+      )}
+    </Field>
+  );
+};
 
 const SettingsTab: React.FC = () => {
   const [rawConfig, setRawConfig] = useState<Record<string, string>>({});
+  const [banks, setBanks] = useState<BankAccount[]>([]);
+  const [stories, setStories] = useState<StoryItem[]>([]);
+  const [gallery, setGallery] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [jsonErrors, setJsonErrors] = useState<Record<string, string>>({});
+  const [backupFile, setBackupFile] = useState<File | null>(null);
 
   useEffect(() => {
     fetch("/api/config/full", { credentials: "include" })
       .then((r) => r.json())
       .then((full) => {
         setRawConfig(full);
+        setBanks(parseJson(full.BANK_ACCOUNTS, []));
+        setStories(parseJson(full.LOVE_STORY, []));
+        setGallery(parseJson(full.GALLERY_IMAGES, []));
         setLoading(false);
       })
       .catch(() => {
@@ -521,6 +470,9 @@ const SettingsTab: React.FC = () => {
           .then((r) => r.json())
           .then((data) => {
             setRawConfig(data);
+            setBanks(parseJson(data.BANK_ACCOUNTS, []));
+            setStories(parseJson(data.LOVE_STORY, []));
+            setGallery(parseJson(data.GALLERY_IMAGES, []));
             setLoading(false);
           });
       });
@@ -528,42 +480,36 @@ const SettingsTab: React.FC = () => {
 
   const handleChange = (key: string, value: string) => {
     setRawConfig((prev) => ({ ...prev, [key]: value }));
-    if (jsonErrors[key]) {
-      setJsonErrors((prev) => {
-        const next = { ...prev };
-        delete next[key];
-        return next;
-      });
-    }
-  };
-
-  const validateJson = (key: string, value: string): boolean => {
-    try {
-      JSON.parse(value);
-      return true;
-    } catch {
-      setJsonErrors((prev) => ({ ...prev, [key]: "JSON tidak valid" }));
-      return false;
-    }
   };
 
   const handleSave = async () => {
-    const jsonFields = ["BANK_ACCOUNTS", "LOVE_STORY", "GALLERY_IMAGES"];
-    let hasError = false;
-    for (const key of jsonFields) {
-      if (rawConfig[key] && !validateJson(key, rawConfig[key])) {
-        hasError = true;
-      }
-    }
-    if (hasError) return;
-
     setSaving(true);
     try {
+      const payload = {
+        ...rawConfig,
+        BANK_ACCOUNTS: JSON.stringify(banks),
+        LOVE_STORY: JSON.stringify(stories),
+        GALLERY_IMAGES: JSON.stringify(gallery),
+        ...(rawConfig.AKAD_START_INPUT
+          ? eventPatch(
+              "AKAD",
+              rawConfig.AKAD_START_INPUT,
+              rawConfig.AKAD_END_INPUT || rawConfig.AKAD_START_INPUT
+            )
+          : {}),
+        ...(rawConfig.RESEPSI_START_INPUT
+          ? eventPatch(
+              "RESEPSI",
+              rawConfig.RESEPSI_START_INPUT,
+              rawConfig.RESEPSI_END_INPUT || rawConfig.RESEPSI_START_INPUT
+            )
+          : {}),
+      };
       const res = await fetch("/api/config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(rawConfig),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         invalidateConfigCache();
@@ -574,6 +520,38 @@ const SettingsTab: React.FC = () => {
       setSaving(false);
     }
   };
+
+  const restoreBackup = async () => {
+    if (!backupFile || !confirm("Restore backup akan mengganti data RSVP, ucapan, dan daftar tamu. Lanjutkan?")) return;
+    const body = await backupFile.text();
+    const res = await fetch("/api/backup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body,
+    });
+    if (res.ok) window.location.reload();
+    else alert("Restore gagal.");
+  };
+
+  const updateArray = <T,>(
+    setter: React.Dispatch<React.SetStateAction<T[]>>,
+    index: number,
+    patch: Partial<T>
+  ) => setter((items) => items.map((item, i) => (i === index ? { ...item, ...patch } : item)));
+
+  const moveArray = <T,>(
+    setter: React.Dispatch<React.SetStateAction<T[]>>,
+    index: number,
+    direction: -1 | 1
+  ) =>
+    setter((items) => {
+      const next = [...items];
+      const target = index + direction;
+      if (target < 0 || target >= next.length) return items;
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
 
   if (loading) {
     return (
@@ -607,58 +585,165 @@ const SettingsTab: React.FC = () => {
         </button>
       </div>
 
-      {CONFIG_SECTIONS.map((section) => (
-        <div
-          key={section.title}
-          className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800"
-        >
-          <h3 className="mb-6 font-serif text-lg font-bold text-slate-800 italic dark:text-white">
-            {section.title}
-          </h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            {section.fields.map((field) => (
-              <div
-                key={field.key}
-                className={
-                  field.type === "textarea" || field.type === "json"
-                    ? "md:col-span-2"
-                    : ""
-                }
-              >
-                <label className="mb-1.5 block text-[11px] font-bold tracking-widest text-slate-400 uppercase dark:text-slate-500">
-                  {field.label}
-                </label>
-                {field.type === "textarea" || field.type === "json" ? (
-                  <textarea
-                    value={rawConfig[field.key] ?? ""}
-                    onChange={(e) => handleChange(field.key, e.target.value)}
-                    placeholder={field.placeholder}
-                    rows={field.type === "json" ? 5 : 3}
-                    className={`w-full rounded-lg border bg-slate-50 px-4 py-3 font-mono text-sm transition-all outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-900 dark:text-white ${
-                      jsonErrors[field.key]
-                        ? "border-red-400 dark:border-red-500"
-                        : "border-slate-200 dark:border-slate-700"
-                    }`}
-                  />
-                ) : (
-                  <input
-                    type={field.type === "number" ? "number" : "text"}
-                    value={rawConfig[field.key] ?? ""}
-                    onChange={(e) => handleChange(field.key, e.target.value)}
-                    placeholder={field.placeholder}
-                    className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition-all outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
-                  />
-                )}
-                {jsonErrors[field.key] && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {jsonErrors[field.key]}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
+      <Section title="Mempelai" icon={Users}>
+        <div className="grid gap-4 md:grid-cols-2">
+          {[
+            ["BRIDE_NICKNAME", "Nama Panggilan Wanita"],
+            ["BRIDE_FULLNAME", "Nama Lengkap Wanita"],
+            ["BRIDE_PARENTS", "Orang Tua Wanita"],
+            ["BRIDE_INSTAGRAM", "Instagram Wanita"],
+            ["GROOM_NICKNAME", "Nama Panggilan Pria"],
+            ["GROOM_FULLNAME", "Nama Lengkap Pria"],
+            ["GROOM_PARENTS", "Orang Tua Pria"],
+            ["GROOM_INSTAGRAM", "Instagram Pria"],
+          ].map(([key, label]) => (
+            <Field key={key} label={label}>
+              <input className={inputClass} value={rawConfig[key] ?? ""} onChange={(e) => handleChange(key, e.target.value)} />
+            </Field>
+          ))}
+          <UploadInput label="Foto Mempelai Wanita" kind="image" value={rawConfig.BRIDE_IMAGE ?? ""} onChange={(v) => handleChange("BRIDE_IMAGE", v)} />
+          <UploadInput label="Foto Mempelai Pria" kind="image" value={rawConfig.GROOM_IMAGE ?? ""} onChange={(v) => handleChange("GROOM_IMAGE", v)} />
         </div>
-      ))}
+      </Section>
+
+      <Section title="Acara & Venue" icon={Settings}>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="Nama Venue"><input className={inputClass} value={rawConfig.VENUE_NAME ?? ""} onChange={(e) => handleChange("VENUE_NAME", e.target.value)} /></Field>
+          <Field label="Kota Hero"><input className={inputClass} value={rawConfig.HERO_CITY ?? ""} onChange={(e) => handleChange("HERO_CITY", e.target.value)} /></Field>
+          <Field label="Alamat Lengkap" wide><textarea rows={3} className={inputClass} value={rawConfig.VENUE_ADDRESS ?? ""} onChange={(e) => handleChange("VENUE_ADDRESS", e.target.value)} /></Field>
+          <Field label="Latitude"><input className={inputClass} value={rawConfig.VENUE_LAT ?? ""} onChange={(e) => handleChange("VENUE_LAT", e.target.value)} /></Field>
+          <Field label="Longitude"><input className={inputClass} value={rawConfig.VENUE_LNG ?? ""} onChange={(e) => handleChange("VENUE_LNG", e.target.value)} /></Field>
+          <Field label="Judul Akad"><input className={inputClass} value={rawConfig.AKAD_TITLE ?? ""} onChange={(e) => handleChange("AKAD_TITLE", e.target.value)} /></Field>
+          <Field label="Akad Mulai"><input type="datetime-local" className={inputClass} value={rawConfig.AKAD_START_INPUT ?? isoToInput(rawConfig.AKAD_ISO_START)} onChange={(e) => handleChange("AKAD_START_INPUT", e.target.value)} /></Field>
+          <Field label="Akad Selesai"><input type="datetime-local" className={inputClass} value={rawConfig.AKAD_END_INPUT ?? isoToInput(rawConfig.AKAD_ISO_END)} onChange={(e) => handleChange("AKAD_END_INPUT", e.target.value)} /></Field>
+          <Field label="Judul Resepsi"><input className={inputClass} value={rawConfig.RESEPSI_TITLE ?? ""} onChange={(e) => handleChange("RESEPSI_TITLE", e.target.value)} /></Field>
+          <Field label="Resepsi Mulai"><input type="datetime-local" className={inputClass} value={rawConfig.RESEPSI_START_INPUT ?? isoToInput(rawConfig.RESEPSI_ISO_START)} onChange={(e) => handleChange("RESEPSI_START_INPUT", e.target.value)} /></Field>
+          <Field label="Resepsi Selesai"><input type="datetime-local" className={inputClass} value={rawConfig.RESEPSI_END_INPUT ?? isoToInput(rawConfig.RESEPSI_ISO_END)} onChange={(e) => handleChange("RESEPSI_END_INPUT", e.target.value)} /></Field>
+        </div>
+      </Section>
+
+      <Section title="Media" icon={ImageIcon}>
+        <div className="grid gap-4 md:grid-cols-2">
+          <UploadInput label="Hero Image" kind="image" value={rawConfig.HERO_IMAGE ?? ""} onChange={(v) => handleChange("HERO_IMAGE", v)} />
+          <UploadInput label="Musik Background" kind="audio" value={rawConfig.MUSIC_URL ?? ""} onChange={(v) => handleChange("MUSIC_URL", v)} />
+          <Field label="Maks Tamu RSVP"><input type="number" className={inputClass} value={rawConfig.RSVP_MAX_GUESTS ?? ""} onChange={(e) => handleChange("RSVP_MAX_GUESTS", e.target.value)} /></Field>
+        </div>
+      </Section>
+
+      <Section title="Galeri" icon={ImageIcon}>
+        <div className="mb-4 flex flex-wrap gap-2">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white">
+            <Upload className="h-4 w-4" /> Upload Banyak Foto
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              className="hidden"
+              onChange={async (e) => {
+                const files = Array.from(e.target.files || []);
+                for (const file of files) {
+                  const body = new FormData();
+                  body.append("file", file);
+                  body.append("kind", "image");
+                  const res = await fetch("/api/upload", { method: "POST", body, credentials: "include" });
+                  const data = await res.json();
+                  if (res.ok) setGallery((items) => [...items, data.url]);
+                }
+              }}
+            />
+          </label>
+          <button type="button" onClick={() => setGallery((items) => [...items, ""])} className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-bold">
+            <Plus className="h-4 w-4" /> Tambah URL
+          </button>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {gallery.map((url, index) => (
+            <div key={index} className="rounded-xl border border-slate-200 p-3 dark:border-slate-700">
+              {url && <img src={url} alt="" className="mb-3 h-36 w-full rounded-lg object-cover" />}
+              <input className={inputClass} value={url} onChange={(e) => setGallery((items) => items.map((item, i) => i === index ? e.target.value : item))} />
+              <div className="mt-2 flex gap-2">
+                <button type="button" onClick={() => moveArray(setGallery, index, -1)} className="rounded border px-2 py-1 text-xs">Naik</button>
+                <button type="button" onClick={() => moveArray(setGallery, index, 1)} className="rounded border px-2 py-1 text-xs">Turun</button>
+                <button type="button" onClick={() => setGallery((items) => items.filter((_, i) => i !== index))} className="ml-auto rounded border border-red-200 px-2 py-1 text-xs text-red-600">Hapus</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Rekening Bank" icon={FileArchive}>
+        <div className="space-y-3">
+          {banks.map((bank, index) => (
+            <div key={index} className="grid gap-3 rounded-xl border border-slate-200 p-3 md:grid-cols-[1fr_1fr_1fr_auto] dark:border-slate-700">
+              <input className={inputClass} placeholder="Bank" value={bank.bank} onChange={(e) => updateArray(setBanks, index, { bank: e.target.value })} />
+              <input className={inputClass} placeholder="Nomor" value={bank.number} onChange={(e) => updateArray(setBanks, index, { number: e.target.value })} />
+              <input className={inputClass} placeholder="Atas Nama" value={bank.name} onChange={(e) => updateArray(setBanks, index, { name: e.target.value })} />
+              <button type="button" onClick={() => setBanks((items) => items.filter((_, i) => i !== index))} className="rounded-lg border border-red-200 px-3 text-red-600">Hapus</button>
+            </div>
+          ))}
+          <button type="button" onClick={() => setBanks((items) => [...items, { bank: "", number: "", name: "" }])} className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white"><Plus className="h-4 w-4" /> Tambah Rekening</button>
+        </div>
+      </Section>
+
+      <Section title="Love Story" icon={MessageCircle}>
+        <div className="space-y-3">
+          {stories.map((story, index) => (
+            <div key={index} className="grid gap-3 rounded-xl border border-slate-200 p-3 md:grid-cols-[160px_1fr_auto] dark:border-slate-700">
+              <input className={inputClass} placeholder="Tanggal/Tahun" value={story.date} onChange={(e) => updateArray(setStories, index, { date: e.target.value })} />
+              <input className={inputClass} placeholder="Judul" value={story.title} onChange={(e) => updateArray(setStories, index, { title: e.target.value })} />
+              <button type="button" onClick={() => setStories((items) => items.filter((_, i) => i !== index))} className="rounded-lg border border-red-200 px-3 text-red-600">Hapus</button>
+              <textarea className={`${inputClass} md:col-span-3`} rows={2} placeholder="Cerita" value={story.desc} onChange={(e) => updateArray(setStories, index, { desc: e.target.value })} />
+            </div>
+          ))}
+          <button type="button" onClick={() => setStories((items) => [...items, { date: "", title: "", desc: "" }])} className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white"><Plus className="h-4 w-4" /> Tambah Cerita</button>
+        </div>
+      </Section>
+
+      <Section title="Teks, Tema, Telegram, dan Admin" icon={Palette}>
+        <div className="grid gap-4 md:grid-cols-2">
+          {[
+            ["TEXT_SALAM_OPENING", "Salam Pembuka", "input"],
+            ["TEXT_QUOTE_SOURCE", "Sumber Kutipan", "input"],
+            ["TEXT_SIGNATURE", "Tanda Tangan", "input"],
+            ["TEXT_FAMILY", "Nama Keluarga", "input"],
+            ["TEXT_GIFT_TITLE", "Judul Hadiah", "input"],
+            ["TEXT_QUOTE_AR_RUM", "Kutipan Ar-Rum", "textarea"],
+            ["TEXT_INVITATION", "Kalimat Undangan", "textarea"],
+            ["TEXT_CLOSING", "Teks Penutup", "textarea"],
+            ["TEXT_SALAM_CLOSING", "Salam Penutup", "input"],
+            ["TEXT_GIFT_DESC", "Deskripsi Hadiah", "textarea"],
+          ].map(([key, label, type]) => (
+            <Field key={key} label={label} wide={type === "textarea"}>
+              {type === "textarea" ? (
+                <textarea rows={3} className={inputClass} value={rawConfig[key] ?? ""} onChange={(e) => handleChange(key, e.target.value)} />
+              ) : (
+                <input className={inputClass} value={rawConfig[key] ?? ""} onChange={(e) => handleChange(key, e.target.value)} />
+              )}
+            </Field>
+          ))}
+          <Field label="Warna Utama"><input type="color" className="h-12 w-full rounded-lg border" value={rawConfig.THEME_PRIMARY ?? "#0f172a"} onChange={(e) => handleChange("THEME_PRIMARY", e.target.value)} /></Field>
+          <Field label="Warna Aksen"><input type="color" className="h-12 w-full rounded-lg border" value={rawConfig.THEME_ACCENT ?? "#7dd3fc"} onChange={(e) => handleChange("THEME_ACCENT", e.target.value)} /></Field>
+          <Field label="Background"><input type="color" className="h-12 w-full rounded-lg border" value={rawConfig.THEME_BACKGROUND ?? "#fafaf9"} onChange={(e) => handleChange("THEME_BACKGROUND", e.target.value)} /></Field>
+          <Field label="Font Style"><select className={inputClass} value={rawConfig.THEME_FONT_STYLE ?? "classic"} onChange={(e) => handleChange("THEME_FONT_STYLE", e.target.value)}><option value="classic">Classic</option><option value="modern">Modern</option><option value="romantic">Romantic</option></select></Field>
+          <Field label="Dark Default"><select className={inputClass} value={rawConfig.THEME_DARK_DEFAULT ?? "false"} onChange={(e) => handleChange("THEME_DARK_DEFAULT", e.target.value)}><option value="false">Light</option><option value="true">Dark</option></select></Field>
+          <Field label="Telegram Bot Token"><input className={inputClass} value={rawConfig.TELEGRAM_BOT_TOKEN ?? ""} onChange={(e) => handleChange("TELEGRAM_BOT_TOKEN", e.target.value)} /></Field>
+          <Field label="Telegram Chat ID"><input className={inputClass} value={rawConfig.TELEGRAM_CHAT_ID ?? ""} onChange={(e) => handleChange("TELEGRAM_CHAT_ID", e.target.value)} /></Field>
+          <Field label="Username Admin"><input className={inputClass} value={rawConfig.ADMIN_USERNAME ?? "admin"} onChange={(e) => handleChange("ADMIN_USERNAME", e.target.value)} /></Field>
+          <Field label="Password Baru"><input type="password" className={inputClass} value={rawConfig.ADMIN_PASSWORD_NEW ?? ""} onChange={(e) => handleChange("ADMIN_PASSWORD_NEW", e.target.value)} placeholder="Kosongkan jika tidak diganti" /></Field>
+        </div>
+      </Section>
+
+      <Section title="Backup & Restore" icon={FileArchive}>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <a href="/api/backup" target="_blank" className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-bold text-white">
+            <Download className="h-4 w-4" /> Export Backup
+          </a>
+          <input type="file" accept="application/json" onChange={(e) => setBackupFile(e.target.files?.[0] || null)} className={inputClass} />
+          <button type="button" onClick={restoreBackup} className="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-3 text-sm font-bold text-white">
+            Restore Backup
+          </button>
+        </div>
+      </Section>
 
       <div className="flex justify-end pb-8">
         <button
@@ -682,6 +767,180 @@ const SettingsTab: React.FC = () => {
   );
 };
 
+const GuestManager: React.FC<{ siteUrl: string }> = ({ siteUrl }) => {
+  const [guests, setGuests] = useState<Guest[]>([]);
+  const [form, setForm] = useState({ name: "", phone: "", address: "", notes: "" });
+  const [csv, setCsv] = useState("");
+
+  const loadGuests = async () => {
+    const res = await fetch("/api/guests", { credentials: "include" });
+    setGuests(await res.json());
+  };
+
+  useEffect(() => {
+    loadGuests();
+  }, []);
+
+  const saveGuest = async () => {
+    if (!form.name.trim()) return;
+    await fetch("/api/guests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(form),
+    });
+    setForm({ name: "", phone: "", address: "", notes: "" });
+    await loadGuests();
+  };
+
+  const importCsv = async () => {
+    const guests = csv
+      .split(/\r?\n/)
+      .map((line) => line.split(",").map((item) => item.trim()))
+      .filter(([name]) => name)
+      .map(([name, phone = "", address = "", notes = ""]) => ({
+        name,
+        phone,
+        address,
+        notes,
+      }));
+    if (guests.length === 0) return;
+    await fetch("/api/guests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ guests }),
+    });
+    setCsv("");
+    await loadGuests();
+  };
+
+  const deleteGuest = async (id: number) => {
+    if (!confirm("Hapus tamu ini?")) return;
+    await fetch("/api/guests", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ id }),
+    });
+    await loadGuests();
+  };
+
+  const exportCsv = () => {
+    const rows = [["name", "slug", "phone", "address", "notes"], ...guests.map((g) => [g.name, g.slug, g.phone || "", g.address || "", g.notes || ""])];
+    const content = rows.map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n");
+    const url = URL.createObjectURL(new Blob([content], { type: "text/csv" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "wedding-guests.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const base = siteUrl.replace(/\/$/, "");
+
+  return (
+    <div className="space-y-6">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800">
+        <h3 className="mb-4 font-serif text-xl font-bold italic">Tambah Tamu</h3>
+        <div className="grid gap-3 md:grid-cols-4">
+          <input className={inputClass} placeholder="Nama" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <input className={inputClass} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+          <input className={inputClass} placeholder="Alamat" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+          <button onClick={saveGuest} className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-sm font-bold text-white">
+            <UserPlus className="h-4 w-4" /> Simpan
+          </button>
+          <textarea className={`${inputClass} md:col-span-4`} rows={2} placeholder="Catatan" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h3 className="font-serif text-xl font-bold italic">Import / Export</h3>
+          <button onClick={exportCsv} className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-bold text-white">
+            <Download className="h-4 w-4" /> Export CSV
+          </button>
+        </div>
+        <textarea className={inputClass} rows={4} placeholder="Format CSV: Nama,Phone,Alamat,Catatan" value={csv} onChange={(e) => setCsv(e.target.value)} />
+        <button onClick={importCsv} className="mt-3 rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold text-white">Import CSV</button>
+      </div>
+
+      <DataTable
+        data={guests}
+        columns={[
+          { header: "Nama", accessor: "name", className: "font-medium" },
+          { header: "Slug", accessor: "slug" },
+          {
+            header: "Link",
+            accessor: (item) => {
+              const url = `${base}/tamu/${item.slug}`;
+              return (
+                <button onClick={() => navigator.clipboard.writeText(url)} className="inline-flex items-center gap-2 rounded bg-slate-100 px-2 py-1 text-xs font-bold dark:bg-slate-700">
+                  <Copy className="h-3 w-3" /> Copy
+                </button>
+              );
+            },
+          },
+          { header: "Phone", accessor: (item) => item.phone || "-" },
+        ]}
+        onDelete={(id) => deleteGuest(id)}
+      />
+    </div>
+  );
+};
+
+const UploadManager: React.FC = () => {
+  const [files, setFiles] = useState<any[]>([]);
+  const loadFiles = async () => {
+    const res = await fetch("/api/uploads", { credentials: "include" });
+    setFiles(await res.json());
+  };
+  useEffect(() => {
+    loadFiles();
+  }, []);
+  const deleteFile = async (file: any) => {
+    const force = file.used
+      ? confirm("File ini masih dipakai di setting. Tetap hapus?")
+      : confirm("Hapus file ini?");
+    if (!force) return;
+    const res = await fetch("/api/uploads", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ url: file.url, force: file.used }),
+    });
+    if (res.ok) await loadFiles();
+    else alert("Gagal hapus file.");
+  };
+  return (
+    <div className="grid gap-4 md:grid-cols-3">
+      {files.length === 0 && (
+        <div className="md:col-span-3 rounded-2xl border border-slate-200 bg-white p-8 text-center text-slate-400 dark:border-slate-700 dark:bg-slate-800">
+          Belum ada file upload.
+        </div>
+      )}
+      {files.map((file) => (
+        <div key={file.url} className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
+          {file.type === "image" ? (
+            <img src={file.url} alt={file.name} className="mb-3 h-40 w-full rounded-xl object-cover" />
+          ) : (
+            <div className="mb-3 flex h-40 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-900">
+              <Music className="h-10 w-10 text-slate-400" />
+            </div>
+          )}
+          <p className="truncate text-sm font-bold">{file.name}</p>
+          <p className="mt-1 text-xs text-slate-400">{Math.round(file.size / 1024)} KB {file.used ? "• dipakai" : ""}</p>
+          {file.type === "audio" && <audio src={file.url} controls className="mt-3 w-full" />}
+          <div className="mt-3 flex gap-2">
+            <button onClick={() => navigator.clipboard.writeText(file.url)} className="flex-1 rounded-lg border px-3 py-2 text-xs font-bold"><Copy className="mr-1 inline h-3 w-3" /> URL</button>
+            <button onClick={() => deleteFile(file)} className="rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-600"><Trash2 className="h-3 w-3" /></button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const AdminDashboard = ({
   initialRsvps,
   initialWishes,
@@ -692,7 +951,7 @@ const AdminDashboard = ({
   siteUrl: string;
 }) => {
   const [activeTab, setActiveTab] = useState<
-    "rsvp" | "wishes" | "qr" | "pdf" | "settings"
+    "rsvp" | "wishes" | "guests" | "uploads" | "qr" | "pdf" | "settings"
   >("rsvp");
   const [rsvps, setRsvps] = useState(initialRsvps);
   const [wishes, setWishes] = useState(initialWishes);
@@ -761,6 +1020,8 @@ const AdminDashboard = ({
   const tabs = [
     { id: "rsvp", label: "Data RSVP", icon: Users },
     { id: "wishes", label: "Ucapan & Doa", icon: MessageCircle },
+    { id: "guests", label: "Tamu", icon: UserPlus },
+    { id: "uploads", label: "Upload", icon: Upload },
     { id: "qr", label: "QR Generator", icon: QrCode },
     { id: "pdf", label: "Design PDF", icon: Printer },
     { id: "settings", label: "Pengaturan", icon: Settings },
@@ -896,6 +1157,18 @@ const AdminDashboard = ({
             onDelete={(id) => handleDelete("wish", [id])}
             onBulkDelete={(ids) => handleDelete("wish", ids)}
           />
+        </div>
+      )}
+
+      {activeTab === "guests" && (
+        <div className="animate-reveal">
+          <GuestManager siteUrl={siteUrl} />
+        </div>
+      )}
+
+      {activeTab === "uploads" && (
+        <div className="animate-reveal">
+          <UploadManager />
         </div>
       )}
 

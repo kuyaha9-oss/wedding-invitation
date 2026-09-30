@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { ChevronDown, Sparkles } from "lucide-react";
 import type { AppConfig } from "../types";
 
-const Hero: React.FC<{ config: AppConfig }> = ({ config }) => {
+const Hero: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
+  config,
+  initialGuestName,
+}) => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -13,7 +16,7 @@ const Hero: React.FC<{ config: AppConfig }> = ({ config }) => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setGuestName(params.get("to"));
+    setGuestName(initialGuestName || params.get("to"));
 
     const timer = setInterval(() => {
       const distance =
@@ -30,7 +33,7 @@ const Hero: React.FC<{ config: AppConfig }> = ({ config }) => {
       }
     }, 1000);
     return () => clearInterval(timer);
-  }, [config.events.akad.startDateTime]);
+  }, [config.events.akad.startDateTime, initialGuestName]);
 
   const handleScrollToContent = () => {
     document.getElementById("couple")?.scrollIntoView({ behavior: "smooth" });

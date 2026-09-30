@@ -1,0 +1,18 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import App from "../../App";
+import db from "../../lib/db";
+
+const slug = Astro.params.slug || "";
+const guest = db
+  .prepare("SELECT name FROM guests WHERE slug = ?")
+  .get(slug) as { name: string } | undefined;
+
+if (!guest) {
+  return Astro.redirect("/");
+}
+---
+
+<Layout title={`Undangan untuk ${guest.name}`}>
+  <App client:only="react" initialGuestName={guest.name} />
+</Layout>

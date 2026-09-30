@@ -101,6 +101,21 @@
   .font-serif {
     font-family: "Cormorant Garamond", serif;
   }
+
+  html[data-font-style="modern"] h1,
+  html[data-font-style="modern"] h2,
+  html[data-font-style="modern"] h3,
+  html[data-font-style="modern"] .font-serif {
+    font-family: "Outfit", sans-serif;
+  }
+
+  html[data-font-style="romantic"] h1,
+  html[data-font-style="romantic"] h2,
+  html[data-font-style="romantic"] h3,
+  html[data-font-style="romantic"] .font-serif {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+  }
 }
 
 /* Custom Classes */

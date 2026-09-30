@@ -1,4 +1,5 @@
 import Database from "better-sqlite3";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -38,6 +39,24 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS config (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS guests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
+    phone TEXT,
+    address TEXT,
+    notes TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS admin_credentials (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    username TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    salt TEXT NOT NULL,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
 `);
 
@@ -119,6 +138,11 @@ const DEFAULT_CONFIG: Record<string, string> = {
     "Kehadiran dan doa restu Anda adalah hadiah terbaik bagi kami. Namun, jika Anda ingin memberikan tanda kasih dalam bentuk lain, kami menerimanya dengan segala kerendahan hati.",
   TELEGRAM_BOT_TOKEN: "",
   TELEGRAM_CHAT_ID: "",
+  THEME_PRIMARY: "#0f172a",
+  THEME_ACCENT: "#7dd3fc",
+  THEME_BACKGROUND: "#fafaf9",
+  THEME_DARK_DEFAULT: "false",
+  THEME_FONT_STYLE: "classic",
 };
 
 const insertDefault = db.prepare(
@@ -130,6 +154,22 @@ const insertMany = db.transaction(() => {
   }
 });
 insertMany();
+
+const hashPassword = (password: string, salt: string): string =>
+  crypto.pbkdf2Sync(password, salt, 120000, 64, "sha512").toString("hex");
+
+const defaultAdmin = db
+  .prepare("SELECT id FROM admin_credentials WHERE id = 1")
+  .get();
+
+if (!defaultAdmin) {
+  const username = process.env.ADMIN_USERNAME || "admin";
+  const password = process.env.ADMIN_PASSWORD || "P@ssw0rd";
+  const salt = crypto.randomBytes(16).toString("hex");
+  db.prepare(
+    "INSERT INTO admin_credentials (id, username, password_hash, salt) VALUES (1, ?, ?, ?)"
+  ).run(username, hashPassword(password, salt), salt);
+}
 
 export const getConfig = (): Record<string, string> => {
   const rows = db.prepare("SELECT key, value FROM config").all() as {
@@ -144,6 +184,47 @@ export const setConfig = (key: string, value: string): void => {
     key,
     value
   );
+};
+
+export const verifyAdmin = (username: string, password: string): boolean => {
+  const row = db
+    .prepare(
+      "SELECT username, password_hash, salt FROM admin_credentials WHERE id = 1"
+    )
+    .get() as
+    | { username: string; password_hash: string; salt: string }
+    | undefined;
+  if (!row || row.username !== username) return false;
+  const attempted = hashPassword(password, row.salt);
+  return crypto.timingSafeEqual(
+    Buffer.from(attempted, "hex"),
+    Buffer.from(row.password_hash, "hex")
+  );
+};
+
+export const updateAdminCredentials = (
+  username: string,
+  password?: string
+): void => {
+  const current = db
+    .prepare("SELECT password_hash, salt FROM admin_credentials WHERE id = 1")
+    .get() as { password_hash: string; salt: string } | undefined;
+  const salt = password ? crypto.randomBytes(16).toString("hex") : current?.salt;
+  const passwordHash =
+    password && salt ? hashPassword(password, salt) : current?.password_hash;
+  if (!salt || !passwordHash) throw new Error("Admin credential missing");
+  db.prepare(
+    `INSERT OR REPLACE INTO admin_credentials
+      (id, username, password_hash, salt, updated_at)
+     VALUES (1, ?, ?, ?, ?)`
+  ).run(username, passwordHash, salt, new Date().toISOString());
+};
+
+export const getAdminUsername = (): string => {
+  const row = db
+    .prepare("SELECT username FROM admin_credentials WHERE id = 1")
+    .get() as { username: string } | undefined;
+  return row?.username || "admin";
 };
 
 export const getDbPath = () => DB_FILE;
