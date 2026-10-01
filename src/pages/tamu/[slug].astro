@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import App from "../../App";
 import db from "../../lib/db";
+import { getWeddingMeta } from "../../utils/meta";
 
 const slug = Astro.params.slug || "";
 const guest = db
@@ -11,8 +12,14 @@ const guest = db
 if (!guest) {
   return Astro.redirect("/");
 }
+
+const meta = getWeddingMeta();
 ---
 
-<Layout title={`Undangan untuk ${guest.name}`}>
+<Layout
+  title={`${meta.title} - ${guest.name}`}
+  description={`Undangan untuk ${guest.name}. ${meta.description}`}
+  image={meta.image}
+>
   <App client:only="react" initialGuestName={guest.name} />
 </Layout>

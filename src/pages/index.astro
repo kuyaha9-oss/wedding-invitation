@@ -1,8 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import App from "../App";
+import { getWeddingMeta } from "../utils/meta";
+
+const meta = getWeddingMeta();
 ---
 
-<Layout title="The Wedding of Fera & Yahya">
+<Layout title={meta.title} description={meta.description} image={meta.image}>
   <App client:only="react" />
 </Layout>

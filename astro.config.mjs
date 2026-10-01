@@ -6,7 +6,7 @@ import { defineConfig } from "astro/config";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  site: "https://wedding.zedlabs.id",
+  site: "https://inv.tkasysyahidiyyah.sch.id",
   security: {
     checkOrigin: false,
   },
