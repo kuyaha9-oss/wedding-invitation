@@ -15,11 +15,9 @@ const Gallery: React.FC<{ config: AppConfig }> = ({ config }) => {
   const [isClosing, setIsClosing] = useState(false);
 
   const getTileClass = (index: number) => {
-    const pattern = index % 8;
-    if (pattern === 0) return "sm:col-span-2 sm:row-span-2";
-    if (pattern === 3) return "sm:row-span-2";
-    if (pattern === 5) return "sm:col-span-2";
-    return "";
+    const pattern = index % 6;
+    if (pattern === 0 || pattern === 5) return "sm:row-span-2";
+    return "aspect-[4/5] sm:aspect-auto";
   };
 
   const openLightbox = (index: number) => {
@@ -77,11 +75,11 @@ const Gallery: React.FC<{ config: AppConfig }> = ({ config }) => {
             Momen-momen indah yang terpatri abadi dalam perjalanan cinta kami
           </p>
         </div>
-        <div className="grid auto-rows-[160px] grid-cols-1 gap-4 sm:grid-cols-4 sm:auto-rows-[150px] md:auto-rows-[190px] md:gap-6 lg:auto-rows-[220px]">
+        <div className="mx-auto grid max-w-5xl auto-rows-[150px] grid-cols-2 gap-2 sm:auto-rows-[170px] md:auto-rows-[210px] md:grid-cols-4 md:gap-3 lg:auto-rows-[240px]">
           {images.map((src, index) => (
             <div
               key={index}
-              className={`group hover:shadow-accent/20 dark:bg-darkSurface relative cursor-pointer overflow-hidden rounded-[1.25rem] border border-slate-100 bg-slate-50 shadow-lg transition-all duration-700 hover:-translate-y-1 md:rounded-[2rem] dark:border-white/5 ${getTileClass(index)}`}
+              className={`group hover:shadow-accent/20 dark:bg-darkSurface relative cursor-pointer overflow-hidden rounded-xl border border-white/70 bg-slate-50 shadow-sm transition-all duration-700 hover:-translate-y-1 hover:shadow-lg md:rounded-2xl dark:border-white/5 ${getTileClass(index)}`}
               onClick={() => openLightbox(index)}
             >
               <img

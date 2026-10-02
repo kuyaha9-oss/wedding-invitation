@@ -4,7 +4,6 @@ import {
   Clock,
   Copy,
   ExternalLink,
-  Heart,
   MapPin,
   Sparkles,
 } from "lucide-react";
@@ -60,18 +59,7 @@ const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
                   key={type}
                   className="group relative flex flex-col items-center gap-6 rounded-[1.5rem] border border-slate-100 bg-slate-50/70 p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl md:rounded-[2rem] md:p-10 dark:border-white/5 dark:bg-white/[0.03]"
                 >
-                  <div className="bg-accentDark/10 dark:bg-accent/10 text-accentDark dark:text-accent flex h-14 w-14 items-center justify-center rounded-2xl border border-white/60 shadow-sm md:h-16 md:w-16 md:rounded-3xl dark:border-white/5">
-                    {type === "akad" ? (
-                      <Heart className="h-6 w-6 fill-current md:h-7 md:w-7" />
-                    ) : (
-                      <Sparkles className="h-6 w-6 md:h-7 md:w-7" />
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="tracking-luxury text-accentDark dark:text-accent text-[9px] font-bold uppercase md:text-[10px]">
-                      {type === "akad" ? "Momen Suci" : "Syukuran Cinta"}
-                    </p>
+                  <div>
                     <h4 className="font-serif text-3xl leading-tight text-slate-900 italic md:text-5xl dark:text-white">
                       {ev.title}
                     </h4>
