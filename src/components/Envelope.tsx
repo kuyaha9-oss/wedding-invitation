@@ -76,21 +76,21 @@ const Envelope: React.FC<EnvelopeProps> = ({
             </div>
           </div>
           <div className="group relative">
-            <div className="from-accent/20 to-accentDark/20 absolute -inset-1 rounded-[3rem] bg-gradient-to-r opacity-30 blur transition duration-1000 group-hover:opacity-60"></div>
-            <div className="frosted-glass relative space-y-8 overflow-hidden rounded-[2.8rem] border border-white/20 p-10 shadow-2xl md:p-16 dark:border-white/10">
+            <div className="from-accent/10 to-accentDark/10 absolute -inset-1 rounded-[3rem] bg-gradient-to-r opacity-20 blur transition duration-1000 group-hover:opacity-40"></div>
+            <div className="relative space-y-8 overflow-hidden rounded-[2.8rem] border border-white/15 bg-slate-950/20 p-10 shadow-xl backdrop-blur-[3px] md:p-16 dark:border-white/10 dark:bg-slate-950/25">
               <div className="relative z-10 space-y-3">
-                <p className="text-accentDark dark:text-accent text-[11px] font-bold tracking-[0.3em] uppercase transition-colors duration-500 md:text-[13px]">
+                <p className="text-accent text-[11px] font-bold tracking-[0.3em] uppercase drop-shadow transition-colors duration-500 md:text-[13px]">
                   Kepada Yth. Bapak/Ibu/Sdr/i:
                 </p>
-                <div className="dark:via-accent/30 mx-auto h-[1px] w-16 bg-gradient-to-r from-transparent via-slate-400 to-transparent opacity-50"></div>
+                <div className="via-accent/40 mx-auto h-[1px] w-16 bg-gradient-to-r from-transparent to-transparent opacity-60"></div>
               </div>
               <div className="relative z-10 py-2">
-                <h2 className="font-serif text-4xl tracking-tight break-words text-slate-900 italic drop-shadow-sm transition-colors duration-500 md:text-6xl dark:text-white">
+                <h2 className="font-serif text-4xl tracking-tight break-words text-white italic drop-shadow-lg transition-colors duration-500 md:text-6xl">
                   {guestName || "Tamu Undangan"}
                 </h2>
               </div>
               <div className="relative z-10 pt-2">
-                <p className="mx-auto max-w-xs text-[10px] leading-relaxed font-light text-slate-600 italic transition-colors duration-500 md:text-[12px] dark:text-slate-400">
+                <p className="mx-auto max-w-xs text-[10px] leading-relaxed font-light text-white/75 italic drop-shadow transition-colors duration-500 md:text-[12px]">
                   Kami mengundang Anda untuk merayakan kebahagiaan kami dalam
                   ikatan suci pernikahan.
                 </p>

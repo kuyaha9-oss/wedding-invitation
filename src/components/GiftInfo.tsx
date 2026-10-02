@@ -4,6 +4,8 @@ import type { AppConfig } from "../types";
 
 const GiftInfo: React.FC<{ config: AppConfig }> = ({ config }) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const physicalGiftAddress =
+    config.gift.physicalAddress || config.venue.address;
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -83,12 +85,12 @@ const GiftInfo: React.FC<{ config: AppConfig }> = ({ config }) => {
               </h4>
             </div>
             <p className="text-sm leading-relaxed font-light text-balance text-slate-500 italic md:text-2xl dark:text-slate-400">
-              {config.venue.address}
+              {physicalGiftAddress}
             </p>
           </div>
           <button
             onClick={() =>
-              copyToClipboard(config.venue.address, "address-gift")
+              copyToClipboard(physicalGiftAddress, "address-gift")
             }
             className={`tracking-luxury relative z-10 inline-flex w-full items-center justify-center gap-3 rounded-xl px-8 py-3.5 text-[9px] font-bold uppercase shadow-md transition-all md:w-auto md:rounded-[2.5rem] md:px-14 md:py-6 md:text-[12px] ${
               copiedId === "address-gift"

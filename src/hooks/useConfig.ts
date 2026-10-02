@@ -15,6 +15,7 @@ const DEFAULT_RAW: Record<string, string> = {
   GROOM_IMAGE: "https://placehold.co/600x800",
   VENUE_NAME: "",
   VENUE_ADDRESS: "",
+  GIFT_PHYSICAL_ADDRESS: "",
   VENUE_LAT: "0",
   VENUE_LNG: "0",
   AKAD_TITLE: "Akad Nikah",

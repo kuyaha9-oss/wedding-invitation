@@ -725,6 +725,7 @@ const SettingsTab: React.FC = () => {
             ["TEXT_CLOSING", "Teks Penutup", "textarea"],
             ["TEXT_SALAM_CLOSING", "Salam Penutup", "input"],
             ["TEXT_GIFT_DESC", "Deskripsi Hadiah", "textarea"],
+            ["GIFT_PHYSICAL_ADDRESS", "Alamat Kado Fisik", "textarea"],
           ].map(([key, label, type]) => (
             <Field key={key} label={label} wide={type === "textarea"}>
               {type === "textarea" ? (

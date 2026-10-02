@@ -10,7 +10,6 @@ import GiftInfo from "./components/GiftInfo";
 import MusicPlayer from "./components/MusicPlayer";
 import FloatingPetals from "./components/FloatingPetals";
 import Envelope from "./components/Envelope";
-import InstallPrompt from "./components/InstallPrompt";
 import Navbar from "./components/Navbar";
 import { useConfig } from "./hooks/useConfig";
 import { Heart, Quote, ChevronUp } from "lucide-react";
@@ -130,7 +129,6 @@ const App: React.FC<{ initialGuestName?: string }> = ({ initialGuestName }) => {
         />
       )}
 
-      <InstallPrompt />
       <FloatingPetals />
       <Hero config={config} initialGuestName={initialGuestName} />
       {isOpened && <Navbar theme={theme} toggleTheme={toggleTheme} />}

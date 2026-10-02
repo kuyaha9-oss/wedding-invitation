@@ -87,16 +87,16 @@ const Hero: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
           </div>
         </div>
 
-        <div className="animate-reveal frosted-glass mt-8 flex items-center justify-center gap-4 rounded-[1.5rem] border border-white/40 px-6 py-5 shadow-2xl [animation-delay:600ms] md:mt-16 md:gap-14 md:rounded-[2.2rem] md:px-10 md:py-8 dark:border-white/10">
+        <div className="animate-reveal mt-8 flex items-center justify-center gap-4 rounded-[1.5rem] border border-white/20 bg-white/10 px-6 py-5 shadow-xl backdrop-blur-[3px] [animation-delay:600ms] md:mt-16 md:gap-14 md:rounded-[2.2rem] md:px-10 md:py-8 dark:border-white/15 dark:bg-slate-950/20">
           {Object.entries(timeLeft).map(([label, value]) => (
             <div
               key={label}
               className="flex min-w-[50px] flex-col items-center md:min-w-[80px]"
             >
-              <span className="font-serif text-2xl leading-none font-bold tracking-tighter text-slate-900 md:text-6xl dark:text-white">
+              <span className="font-serif text-2xl leading-none font-bold tracking-tighter text-white drop-shadow md:text-6xl">
                 {String(value).padStart(2, "0")}
               </span>
-              <span className="text-accentDark/80 dark:text-accent/60 mt-1 text-[7px] font-black tracking-[0.2em] uppercase md:mt-3 md:text-[11px]">
+              <span className="text-accent/75 mt-1 text-[7px] font-black tracking-[0.2em] uppercase drop-shadow md:mt-3 md:text-[11px]">
                 {label}
               </span>
             </div>

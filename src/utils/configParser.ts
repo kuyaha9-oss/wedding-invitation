@@ -69,6 +69,10 @@ export function parseConfig(raw: Record<string, string>): AppConfig {
       maxGuests: parseInt(raw.RSVP_MAX_GUESTS ?? "10", 10),
     },
     bankAccounts: parseJson(raw.BANK_ACCOUNTS, []),
+    gift: {
+      physicalAddress:
+        raw.GIFT_PHYSICAL_ADDRESS?.trim() || raw.VENUE_ADDRESS || "",
+    },
     loveStory: parseJson(raw.LOVE_STORY, []),
     galleryImages: parseJson(raw.GALLERY_IMAGES, []),
     text: {

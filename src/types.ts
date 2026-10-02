@@ -60,6 +60,9 @@ export interface AppConfig {
     maxGuests: number;
   };
   bankAccounts: { bank: string; number: string; name: string }[];
+  gift: {
+    physicalAddress: string;
+  };
   loveStory: { date: string; title: string; desc: string }[];
   galleryImages: string[];
   text: {

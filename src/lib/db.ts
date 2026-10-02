@@ -73,6 +73,8 @@ const DEFAULT_CONFIG: Record<string, string> = {
   GROOM_IMAGE: "https://placehold.co/600x800?text=Yaya+Portrait",
   VENUE_NAME: "The Royal Azure Ballroom",
   VENUE_ADDRESS: "Jl. Taman Makam Pahlawan No.48, Kab. Pandeglang, Banten",
+  GIFT_PHYSICAL_ADDRESS:
+    "Jl. Taman Makam Pahlawan No.48, Kab. Pandeglang, Banten",
   VENUE_LAT: "-6.3032707",
   VENUE_LNG: "106.1011039",
   AKAD_TITLE: "Akad Nikah",
