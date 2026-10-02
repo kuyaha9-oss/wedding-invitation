@@ -63,7 +63,7 @@ const Gallery: React.FC<{ config: AppConfig }> = ({ config }) => {
             <div className="bg-accentDark dark:bg-accent h-[1px] w-8 md:w-16"></div>
           </div>
           <h2 className="font-serif text-5xl tracking-tight text-slate-900 italic md:text-9xl dark:text-white">
-            Our Gallery
+            Galeri Kami
           </h2>
           <p className="tracking-luxury text-[10px] font-black text-balance text-slate-400 uppercase italic md:text-[13px] dark:text-slate-500">
             Momen-momen indah yang terpatri abadi dalam perjalanan cinta kami
@@ -73,7 +73,7 @@ const Gallery: React.FC<{ config: AppConfig }> = ({ config }) => {
           {images.map((src, index) => (
             <div
               key={index}
-              className="group hover:shadow-accent/20 dark:bg-darkSurface relative cursor-pointer overflow-hidden rounded-[2rem] border border-slate-100 bg-slate-50 shadow-xl transition-all duration-700 hover:-translate-y-3 md:rounded-[3.5rem] dark:border-white/5"
+              className="group hover:shadow-accent/20 dark:bg-darkSurface relative cursor-pointer overflow-hidden rounded-[1.5rem] border border-slate-100 bg-slate-50 shadow-lg transition-all duration-700 hover:-translate-y-2 md:rounded-[2.5rem] dark:border-white/5"
               onClick={() => openLightbox(index)}
             >
               <img

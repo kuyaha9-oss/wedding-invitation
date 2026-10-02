@@ -23,6 +23,7 @@ const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
   const [isSending, setIsSending] = useState(false);
   const [isNameLocked, setIsNameLocked] = useState(false);
   const [postSuccess, setPostSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     loadWishes();
@@ -43,6 +44,7 @@ const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
     e.preventDefault();
     if (!name.trim() || !message.trim()) return;
     setIsSending(true);
+    setErrorMessage("");
     try {
       await dbService.saveWish({ name, message });
       setMessage("");
@@ -53,6 +55,11 @@ const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
       setTimeout(() => setPostSuccess(false), 3000);
     } catch (err) {
       console.error(err);
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "Ucapan gagal dikirim. Silakan coba lagi."
+      );
     } finally {
       setIsSending(false);
     }
@@ -99,7 +106,7 @@ const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
             <div className="bg-accentDark dark:bg-accent h-[1px] w-12 md:w-24"></div>
           </div>
           <h2 className="font-serif text-5xl leading-none tracking-tighter text-slate-900 italic md:text-[10rem] dark:text-white">
-            Prayers & Wishes
+            Doa & Ucapan
           </h2>
           <p className="tracking-luxury text-[10px] font-black text-balance text-slate-400 uppercase italic md:text-[14px] dark:text-slate-500">
             Untaian doa dan harapan tulus dari orang-orang tersayang
@@ -112,7 +119,7 @@ const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
               <div className="relative z-10 space-y-10 md:space-y-16">
                 <div className="space-y-4">
                   <span className="tracking-luxury text-accentDark dark:text-accent text-[10px] font-black uppercase md:text-[12px]">
-                    Guest Book
+                    Buku Ucapan
                   </span>
                   <h3 className="font-serif text-3xl text-slate-900 italic md:text-5xl dark:text-white">
                     Kirim Ucapan
@@ -136,7 +143,7 @@ const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
                         onChange={(e) => setName(e.target.value)}
                       />
                       <label className="absolute -top-4 left-0 text-[8px] font-black tracking-widest text-slate-400 uppercase md:text-[10px]">
-                        Your Name {isNameLocked && "(Locked)"}
+                        Nama {isNameLocked && "(Terkunci)"}
                       </label>
                     </div>
                     <div className="group/input relative">
@@ -148,7 +155,7 @@ const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
                         onChange={(e) => setMessage(e.target.value)}
                       />
                       <label className="absolute -top-4 left-0 text-[8px] font-black tracking-widest text-slate-400 uppercase md:text-[10px]">
-                        Your Message
+                        Ucapan
                       </label>
                     </div>
                   </div>
@@ -162,20 +169,25 @@ const Wishes: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
                     }`}
                   >
                     {isSending ? (
-                      "Sending..."
+                      "Mengirim..."
                     ) : postSuccess ? (
                       <>
                         Success <Check className="h-3.5 w-3.5 md:h-5 md:w-5" />
                       </>
                     ) : isNameLocked ? (
-                      "Update Message"
+                      "Perbarui Ucapan"
                     ) : (
-                      "Send Message"
+                      "Kirim Ucapan"
                     )}
                     {!isSending && !postSuccess && (
                       <Send className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 md:h-5 md:w-5" />
                     )}
                   </button>
+                  {errorMessage && (
+                    <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-medium text-red-600 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+                      {errorMessage}
+                    </div>
+                  )}
                 </form>
               </div>
             </div>

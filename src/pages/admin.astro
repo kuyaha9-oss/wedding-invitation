@@ -2,9 +2,12 @@
 import { CheckCircle2, HelpCircle, LogOut, Users, XCircle } from "lucide-react";
 import AdminDashboard from "../components/Admin/AdminDashboard";
 import Layout from "../layouts/Layout.astro";
+import {
+  createAdminSession,
+  destroyAdminSession,
+  isAdminRequest,
+} from "../lib/adminAuth";
 import db, { getAdminUsername, verifyAdmin } from "../lib/db";
-
-const COOKIE_NAME = "wedding_admin_auth";
 
 if (Astro.request.method === "POST") {
   const contentType = Astro.request.headers.get("content-type") || "";
@@ -17,12 +20,7 @@ if (Astro.request.method === "POST") {
       const username = body.username?.toString() || getAdminUsername();
       const password = (body.password ?? body.credential)?.toString();
       if (password && verifyAdmin(username, password)) {
-        Astro.cookies.set(COOKIE_NAME, "true", {
-          path: "/",
-          httpOnly: true,
-          secure: import.meta.env.PROD,
-          maxAge: 60 * 60 * 24,
-        });
+        createAdminSession(Astro.cookies, import.meta.env.PROD);
         return new Response(JSON.stringify({ success: true }), {
           status: 200,
           headers: { "Content-Type": "application/json" },
@@ -39,7 +37,7 @@ if (Astro.request.method === "POST") {
     }
 
     if (action === "logout") {
-      Astro.cookies.delete(COOKIE_NAME, { path: "/" });
+      destroyAdminSession(Astro.cookies);
       return new Response(JSON.stringify({ success: true }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
@@ -48,7 +46,7 @@ if (Astro.request.method === "POST") {
   }
 }
 
-const isAuthenticated = Astro.cookies.has(COOKIE_NAME);
+const isAuthenticated = isAdminRequest(Astro);
 let rsvps = [],
   wishes = [],
   stats = { total: 0, hadir: 0, ragu: 0, tidak: 0, guestCount: 0 };
@@ -197,7 +195,6 @@ if (isAuthenticated) {
   </main>
 
   <script>
-
     const loginBtn = document.getElementById("login-btn");
     const usernameInput = document.getElementById(
       "admin-username"
@@ -242,7 +239,6 @@ if (isAuthenticated) {
         if (e.key === "Enter") doLogin();
       });
     }
-
 
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {

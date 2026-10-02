@@ -39,12 +39,12 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
     resetTimer();
   };
   const navItems = [
-    { icon: Home, label: "Home", href: "#" },
-    { icon: User, label: "Couple", href: "#couple" },
-    { icon: Calendar, label: "Events", href: "#event" },
-    { icon: ImageIcon, label: "Gallery", href: "#gallery" },
+    { icon: Home, label: "Beranda", href: "#" },
+    { icon: User, label: "Mempelai", href: "#couple" },
+    { icon: Calendar, label: "Acara", href: "#event" },
+    { icon: ImageIcon, label: "Galeri", href: "#gallery" },
     { icon: Send, label: "RSVP", href: "#rsvp" },
-    { icon: MessageCircle, label: "Wishes", href: "#wishes" },
+    { icon: MessageCircle, label: "Ucapan", href: "#wishes" },
   ];
   const itemBaseClass =
     "p-3 md:p-4 rounded-full text-slate-600 dark:text-slate-300 hover:text-accent dark:hover:text-accent hover:bg-white/80 dark:hover:bg-white/10 transition-all group relative flex items-center justify-center";
@@ -76,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             handleAction();
           }}
           className={itemBaseClass}
-          aria-label="Toggle theme"
+          aria-label="Ganti tema"
         >
           {theme === "light" ? (
             <Moon className="h-5 w-5 md:h-6 md:w-6" />
@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             <Sun className="h-5 w-5 md:h-6 md:w-6" />
           )}
           <span className={tooltipClass}>
-            {theme === "light" ? "Dark Mode" : "Light Mode"}
+            {theme === "light" ? "Mode Gelap" : "Mode Terang"}
           </span>
         </button>
       </div>

@@ -73,7 +73,7 @@ const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
             return (
               <div
                 key={type}
-                className="editorial-card dark:bg-darkSurface group relative flex flex-col items-center space-y-8 overflow-visible rounded-[2.5rem] bg-white p-8 text-center md:space-y-12 md:rounded-[4rem] md:p-20"
+                className="editorial-card dark:bg-darkSurface group relative flex flex-col items-center space-y-8 overflow-visible rounded-[1.75rem] bg-white p-8 text-center md:space-y-10 md:rounded-[2.75rem] md:p-14"
               >
                 <div className="bg-accentDark/10 dark:bg-accent/10 text-accentDark dark:text-accent animate-float absolute -top-4 -right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 backdrop-blur-md md:-top-6 md:-right-6 md:h-16 md:w-16 dark:border-white/5">
                   {type === "akad" ? (
@@ -114,7 +114,7 @@ const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
                     className="bg-primary dark:bg-accentDark tracking-editorial flex w-full items-center justify-center gap-3 rounded-2xl py-4 text-[10px] font-bold text-white uppercase transition-all hover:shadow-2xl active:scale-95 md:gap-5 md:rounded-3xl md:py-6 md:text-[11px]"
                   >
                     <CalendarPlus className="h-4 w-4 md:h-5 md:w-5" />
-                    Save The Date
+                    Simpan Tanggal
                     <ChevronDown
                       className={`h-3 w-3 transition-transform duration-500 md:h-4 md:w-4 ${
                         activeDropdown === type ? "rotate-180" : ""
@@ -148,7 +148,7 @@ const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
             );
           })}
         </div>
-        <div className="editorial-card space-y-12 rounded-[2.5rem] p-8 md:space-y-16 md:rounded-[4rem] md:p-20">
+        <div className="editorial-card space-y-12 rounded-[1.75rem] p-8 md:space-y-14 md:rounded-[2.75rem] md:p-14">
           <div className="flex flex-col justify-between gap-8 md:gap-12 lg:flex-row lg:items-center">
             <div className="space-y-6">
               <div className="flex items-start gap-5 md:items-center md:gap-8">
@@ -175,7 +175,7 @@ const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
                 ) : (
                   <Copy className="text-accentDark dark:text-accent h-4 w-4 md:h-5 md:w-5" />
                 )}
-                {copied ? "Address Copied" : "Copy Address"}
+                {copied ? "Alamat Disalin" : "Salin Alamat"}
               </button>
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${config.venue.latitude},${config.venue.longitude}`}
@@ -183,11 +183,11 @@ const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
                 rel="noopener noreferrer"
                 className="bg-primary dark:text-primary tracking-editorial flex w-full items-center justify-center gap-3 rounded-xl px-6 py-4 text-[10px] font-bold text-white uppercase transition-all hover:shadow-2xl sm:w-1/2 md:gap-4 md:rounded-[2rem] md:px-12 md:py-5 md:text-[11px] lg:w-auto dark:bg-white"
               >
-                <ExternalLink className="h-4 w-4 md:h-5 md:w-5" /> Open In Maps
+                <ExternalLink className="h-4 w-4 md:h-5 md:w-5" /> Buka Maps
               </a>
             </div>
           </div>
-          <div className="relative h-[350px] overflow-hidden rounded-[1.5rem] border border-slate-100 shadow-2xl md:h-[600px] md:rounded-[3.5rem] dark:border-white/10">
+          <div className="relative h-[350px] overflow-hidden rounded-[1.5rem] border border-slate-100 shadow-xl md:h-[520px] md:rounded-[2.5rem] dark:border-white/10">
             <iframe
               src={mapUrl}
               width="100%"

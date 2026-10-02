@@ -5,6 +5,18 @@ let wishesCache: { data: Wish[]; timestamp: number } | null = null;
 
 const CACHE_DURATION = 30 * 1000;
 
+const getErrorMessage = async (
+  response: Response,
+  fallback: string
+): Promise<string> => {
+  try {
+    const data = await response.json();
+    return typeof data.error === "string" ? data.error : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
 export const dbService = {
   async initializeDemo() {},
 
@@ -36,7 +48,14 @@ export const dbService = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error("Failed to save RSVP");
+    if (!response.ok) {
+      throw new Error(
+        await getErrorMessage(
+          response,
+          "RSVP gagal dikirim. Silakan coba lagi."
+        )
+      );
+    }
     return {
       ...data,
       id: Date.now(),
@@ -69,7 +88,14 @@ export const dbService = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error("Failed to save wish");
+    if (!response.ok) {
+      throw new Error(
+        await getErrorMessage(
+          response,
+          "Ucapan gagal dikirim. Silakan coba lagi."
+        )
+      );
+    }
     return {
       ...data,
       id: Date.now(),

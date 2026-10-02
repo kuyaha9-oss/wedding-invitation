@@ -1,7 +1,10 @@
 import type { APIRoute } from "astro";
+import { isAdminRequest, unauthorized } from "../../lib/adminAuth";
 import db from "../../lib/db";
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async (context) => {
+  if (!isAdminRequest(context)) return unauthorized();
+
   try {
     const stmt = db.prepare(`
       SELECT guest_name, phone, attendance, guest_count, message, created_at 

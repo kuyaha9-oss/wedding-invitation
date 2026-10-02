@@ -11,6 +11,7 @@ import MusicPlayer from "./components/MusicPlayer";
 import FloatingPetals from "./components/FloatingPetals";
 import Envelope from "./components/Envelope";
 import InstallPrompt from "./components/InstallPrompt";
+import Navbar from "./components/Navbar";
 import { useConfig } from "./hooks/useConfig";
 import { Heart, Quote, ChevronUp } from "lucide-react";
 
@@ -99,6 +100,10 @@ const App: React.FC<{ initialGuestName?: string }> = ({ initialGuestName }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const toggleTheme = () => {
+    setTheme((current) => (current === "light" ? "dark" : "light"));
+  };
+
   if (loading || !config) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-slate-950">
@@ -128,6 +133,7 @@ const App: React.FC<{ initialGuestName?: string }> = ({ initialGuestName }) => {
       <InstallPrompt />
       <FloatingPetals />
       <Hero config={config} initialGuestName={initialGuestName} />
+      {isOpened && <Navbar theme={theme} toggleTheme={toggleTheme} />}
 
       <main className="relative z-10 space-y-0">
         <CoupleProfile config={config} />
@@ -139,7 +145,7 @@ const App: React.FC<{ initialGuestName?: string }> = ({ initialGuestName }) => {
         <GiftInfo config={config} />
       </main>
 
-      <MusicPlayer url={config.music.url} />
+      <MusicPlayer url={config.music.url} showControl={isOpened} />
       <footer className="dark:bg-darkSurface relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-white px-6 transition-colors duration-1000">
         <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-10 dark:opacity-[0.05]">
           <Heart className="animate-pulse-soft h-[85vw] w-[85vw] stroke-[0.3]" />

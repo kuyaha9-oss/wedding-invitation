@@ -27,6 +27,7 @@ const RSVPForm: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
   const [submitted, setSubmitted] = useState(false);
   const [isNameLocked, setIsNameLocked] = useState(false);
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const maxGuests = config.rsvp.maxGuests;
 
@@ -49,12 +50,18 @@ const RSVPForm: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
     e.preventDefault();
     if (!formData.guest_name) return;
     setIsSubmitting(true);
+    setErrorMessage("");
     try {
       await dbService.saveRSVP(formData);
       setSubmitted(true);
       await loadRSVPs();
     } catch (err) {
       console.error(err);
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "RSVP gagal dikirim. Silakan coba lagi."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -172,14 +179,14 @@ const RSVPForm: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
                             }
                           />
                           <label className="tracking-editorial group-focus-within/input:text-accentDark absolute -top-3.5 left-0 text-[7px] font-bold text-slate-400 uppercase transition-colors md:text-[9px]">
-                            Nama {isNameLocked && "(Locked)"}
+                            Nama {isNameLocked && "(Terkunci)"}
                           </label>
                         </div>
                         <div className="group/input relative">
                           <input
                             type="text"
                             className="focus:border-accentDark dark:focus:border-accent w-full border-b border-slate-200 bg-transparent py-2 font-serif text-base text-slate-900 italic transition-all outline-none placeholder:text-slate-200 md:py-5 md:text-xl dark:border-white/10 dark:text-white"
-                            placeholder="WhatsApp / Phone"
+                            placeholder="WhatsApp / Telepon"
                             value={formData.phone}
                             onChange={(e) =>
                               setFormData({
@@ -270,16 +277,22 @@ const RSVPForm: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
                         </div>
                       )}
 
+                      {errorMessage && (
+                        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-medium text-red-600 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+                          {errorMessage}
+                        </div>
+                      )}
+
                       <button
                         disabled={isSubmitting}
                         type="submit"
                         className="bg-primary dark:bg-accentDark tracking-luxury group flex w-full items-center justify-center gap-3 rounded-xl py-3.5 text-[9px] font-bold text-white uppercase shadow-sm transition-all duration-700 hover:shadow-xl active:scale-95 disabled:opacity-50 md:rounded-3xl md:py-6 md:text-[11px]"
                       >
                         {isSubmitting
-                          ? "Sending..."
+                          ? "Mengirim..."
                           : isNameLocked
-                            ? "Update RSVP"
-                            : "Send RSVP"}
+                            ? "Perbarui RSVP"
+                            : "Kirim RSVP"}
                         <Send className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 md:h-5 md:w-5" />
                       </button>
                     </form>

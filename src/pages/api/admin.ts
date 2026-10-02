@@ -1,13 +1,9 @@
 import type { APIRoute } from "astro";
+import { isAdminRequest, unauthorized } from "../../lib/adminAuth";
 import db from "../../lib/db";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const auth = cookies.get("wedding_admin_auth")?.value;
-  if (auth !== "true") {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-    });
-  }
+  if (!isAdminRequest({ cookies })) return unauthorized();
 
   try {
     const body = await request.json();

@@ -1,9 +1,9 @@
 ---
 import QRCodeGenerator from "../components/QRCodeGenerator";
 import Layout from "../layouts/Layout.astro";
+import { isAdminRequest } from "../lib/adminAuth";
 
-const COOKIE_NAME = "wedding_admin_auth";
-const isAuthenticated = Astro.cookies.has(COOKIE_NAME);
+const isAuthenticated = isAdminRequest(Astro);
 
 if (!isAuthenticated) {
   return Astro.redirect("/admin");
