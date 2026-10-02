@@ -1,8 +1,6 @@
 import {
   Calendar,
-  CalendarPlus,
   Check,
-  ChevronDown,
   Clock,
   Copy,
   ExternalLink,
@@ -12,40 +10,14 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import type { AppConfig } from "../types";
-import { downloadICS, generateGoogleCalendarUrl } from "../utils/calendarUtils";
 
 const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
   const [copied, setCopied] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<
-    "akad" | "resepsi" | null
-  >(null);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(config.venue.address);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const mapUrl = `https://maps.google.com/maps?q=${config.venue.latitude},${config.venue.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-
-  const handleCalendar = (
-    type: "google" | "ics",
-    eventType: "akad" | "resepsi"
-  ) => {
-    const ev = config.events[eventType];
-    const event = {
-      title: `${ev.title} ${config.couple.bride.name} & ${config.couple.groom.name}`,
-      description: `Menghadiri ${ev.title} pernikahan ${config.couple.bride.name} & ${config.couple.groom.name}.`,
-      location: config.venue.address,
-      startTime: ev.startDateTime,
-      endTime: ev.endDateTime,
-    };
-    if (type === "google") {
-      window.open(generateGoogleCalendarUrl(event), "_blank");
-    } else {
-      downloadICS(event);
-    }
-    setActiveDropdown(null);
   };
 
   return (
@@ -67,88 +39,66 @@ const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
             {config.text.invitation}
           </p>
         </div>
-        <div className="mb-16 grid gap-6 md:mb-20 md:grid-cols-2 md:gap-14">
-          {(["akad", "resepsi"] as const).map((type) => {
-            const ev = config.events[type];
-            return (
-              <div
-                key={type}
-                className="editorial-card dark:bg-darkSurface group relative flex flex-col items-center space-y-8 overflow-visible rounded-[1.75rem] bg-white p-8 text-center md:space-y-10 md:rounded-[2.75rem] md:p-14"
-              >
-                <div className="bg-accentDark/10 dark:bg-accent/10 text-accentDark dark:text-accent animate-float absolute -top-4 -right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 backdrop-blur-md md:-top-6 md:-right-6 md:h-16 md:w-16 dark:border-white/5">
-                  {type === "akad" ? (
-                    <Heart className="h-5 w-5 fill-current md:h-7 md:w-7" />
-                  ) : (
-                    <Sparkles className="h-5 w-5 md:h-7 md:w-7" />
-                  )}
-                </div>
-                <div className="space-y-2 md:space-y-4">
-                  <span className="tracking-luxury text-accentDark dark:text-accent text-[9px] font-bold uppercase md:text-[10px]">
-                    Our Sacred Day
-                  </span>
-                  <h3 className="font-serif text-3xl leading-tight text-slate-900 italic md:text-7xl dark:text-white">
-                    {ev.title}
-                  </h3>
-                </div>
-                <div className="w-full space-y-6 border-y border-slate-100 py-8 md:space-y-8 md:py-10 dark:border-white/5">
-                  <div className="flex flex-col items-center justify-center gap-3 font-serif text-xl text-slate-700 italic md:text-3xl dark:text-slate-100">
-                    <div className="flex items-center gap-3 md:gap-4">
-                      <Calendar className="text-accentDark dark:text-accent h-5 w-5 md:h-6 md:w-6" />
+        <div className="editorial-card dark:bg-darkSurface relative mb-16 overflow-hidden rounded-[1.75rem] bg-white p-8 text-center md:mb-20 md:rounded-[2.75rem] md:p-14">
+          <div className="pointer-events-none absolute -top-12 -right-12 h-48 w-48 rounded-full bg-accent/10 blur-3xl"></div>
+          <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-accentDark/10 blur-3xl dark:bg-accent/5"></div>
+
+          <div className="relative z-10 mb-8 space-y-3 md:mb-12 md:space-y-5">
+            <span className="tracking-luxury text-accentDark dark:text-accent text-[9px] font-bold uppercase md:text-[11px]">
+              Our Sacred Day
+            </span>
+            <h3 className="font-serif text-4xl leading-tight tracking-tight text-slate-900 italic md:text-7xl dark:text-white">
+              Akad & Resepsi
+            </h3>
+          </div>
+
+          <div className="relative z-10 grid gap-5 md:grid-cols-2 md:gap-8">
+            {(["akad", "resepsi"] as const).map((type) => {
+              const ev = config.events[type];
+              return (
+                <div
+                  key={type}
+                  className="group relative flex flex-col items-center gap-6 rounded-[1.5rem] border border-slate-100 bg-slate-50/70 p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl md:rounded-[2rem] md:p-10 dark:border-white/5 dark:bg-white/[0.03]"
+                >
+                  <div className="bg-accentDark/10 dark:bg-accent/10 text-accentDark dark:text-accent flex h-14 w-14 items-center justify-center rounded-2xl border border-white/60 shadow-sm md:h-16 md:w-16 md:rounded-3xl dark:border-white/5">
+                    {type === "akad" ? (
+                      <Heart className="h-6 w-6 fill-current md:h-7 md:w-7" />
+                    ) : (
+                      <Sparkles className="h-6 w-6 md:h-7 md:w-7" />
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="tracking-luxury text-accentDark dark:text-accent text-[9px] font-bold uppercase md:text-[10px]">
+                      {type === "akad" ? "Momen Suci" : "Syukuran Cinta"}
+                    </p>
+                    <h4 className="font-serif text-3xl leading-tight text-slate-900 italic md:text-5xl dark:text-white">
+                      {ev.title}
+                    </h4>
+                  </div>
+
+                  <div className="w-full space-y-5 border-t border-slate-200/70 pt-6 dark:border-white/10">
+                    <div className="flex flex-col items-center justify-center gap-3 font-serif text-xl text-slate-700 italic md:text-2xl dark:text-slate-100">
+                      <div className="flex items-center gap-3 md:gap-4">
+                        <Calendar className="text-accentDark dark:text-accent h-5 w-5 md:h-6 md:w-6" />
+                        <span>
+                          {ev.day}, {ev.date}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="tracking-editorial flex items-center justify-center gap-3 text-[11px] font-bold text-slate-400 uppercase md:gap-4 md:text-[12px] dark:text-slate-500">
+                      <Clock className="text-accentDark dark:text-accent h-4 w-4 md:h-5 md:w-5" />
                       <span>
-                        {ev.day}, {ev.date}
+                        {ev.startTime} — {ev.endTime} WIB
                       </span>
                     </div>
                   </div>
-                  <div className="tracking-editorial flex items-center justify-center gap-3 text-[11px] font-bold text-slate-400 uppercase md:gap-4 md:text-[12px] dark:text-slate-500">
-                    <Clock className="text-accentDark dark:text-accent h-4 w-4 md:h-5 md:w-5" />
-                    <span>
-                      {ev.startTime} — {ev.endTime} WIB
-                    </span>
-                  </div>
                 </div>
-                <div className="relative w-full">
-                  <button
-                    onClick={() =>
-                      setActiveDropdown(activeDropdown === type ? null : type)
-                    }
-                    className="bg-primary dark:bg-accentDark tracking-editorial flex w-full items-center justify-center gap-3 rounded-2xl py-4 text-[10px] font-bold text-white uppercase transition-all hover:shadow-2xl active:scale-95 md:gap-5 md:rounded-3xl md:py-6 md:text-[11px]"
-                  >
-                    <CalendarPlus className="h-4 w-4 md:h-5 md:w-5" />
-                    Simpan Tanggal
-                    <ChevronDown
-                      className={`h-3 w-3 transition-transform duration-500 md:h-4 md:w-4 ${
-                        activeDropdown === type ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                  {activeDropdown === type && (
-                    <div className="frosted-glass animate-reveal absolute top-full right-0 left-0 z-[50] mt-3 overflow-hidden rounded-[1.5rem] border border-slate-200 p-2 shadow-2xl md:mt-4 md:rounded-[2rem] md:p-3 dark:border-white/10">
-                      <button
-                        onClick={() => handleCalendar("google", type)}
-                        className="flex w-full items-center gap-4 rounded-xl px-6 py-4 text-left text-slate-800 transition-colors hover:bg-slate-50 md:gap-5 md:rounded-2xl md:px-8 md:py-6 dark:text-white dark:hover:bg-white/5"
-                      >
-                        <div className="bg-accentDark dark:bg-accent h-2 w-2 animate-pulse rounded-full md:h-3 md:w-3"></div>
-                        <span className="tracking-luxury text-[10px] font-bold uppercase md:text-[11px]">
-                          Google Calendar
-                        </span>
-                      </button>
-                      <button
-                        onClick={() => handleCalendar("ics", type)}
-                        className="flex w-full items-center gap-4 rounded-xl px-6 py-4 text-left text-slate-800 transition-colors hover:bg-slate-50 md:gap-5 md:rounded-2xl md:px-8 md:py-6 dark:text-white dark:hover:bg-white/5"
-                      >
-                        <div className="h-2 w-2 rounded-full bg-slate-300 md:h-3 md:w-3 dark:bg-slate-600"></div>
-                        <span className="tracking-luxury text-[10px] font-bold uppercase md:text-[11px]">
-                          Apple / Outlook
-                        </span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-        <div className="editorial-card space-y-12 rounded-[1.75rem] p-8 md:space-y-14 md:rounded-[2.75rem] md:p-14">
+        <div className="editorial-card rounded-[1.75rem] p-8 md:rounded-[2.75rem] md:p-14">
           <div className="flex flex-col justify-between gap-8 md:gap-12 lg:flex-row lg:items-center">
             <div className="space-y-6">
               <div className="flex items-start gap-5 md:items-center md:gap-8">
@@ -186,18 +136,6 @@ const EventDetails: React.FC<{ config: AppConfig }> = ({ config }) => {
                 <ExternalLink className="h-4 w-4 md:h-5 md:w-5" /> Buka Maps
               </a>
             </div>
-          </div>
-          <div className="relative h-[350px] overflow-hidden rounded-[1.5rem] border border-slate-100 shadow-xl md:h-[520px] md:rounded-[2.5rem] dark:border-white/10">
-            <iframe
-              src={mapUrl}
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              className="contrast-125 grayscale-[0.3] transition-all hover:grayscale-0 dark:opacity-80"
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
           </div>
         </div>
       </div>

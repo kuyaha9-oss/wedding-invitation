@@ -2,22 +2,15 @@ import React, { useState, useEffect } from "react";
 import { ChevronDown, Sparkles } from "lucide-react";
 import type { AppConfig } from "../types";
 
-const Hero: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
-  config,
-  initialGuestName,
-}) => {
+const Hero: React.FC<{ config: AppConfig }> = ({ config }) => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
-  const [guestName, setGuestName] = useState<string | null>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setGuestName(initialGuestName || params.get("to"));
-
     const timer = setInterval(() => {
       const distance =
         config.events.akad.startDateTime.getTime() - new Date().getTime();
@@ -33,7 +26,7 @@ const Hero: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
       }
     }, 1000);
     return () => clearInterval(timer);
-  }, [config.events.akad.startDateTime, initialGuestName]);
+  }, [config.events.akad.startDateTime]);
 
   const handleScrollToContent = () => {
     document.getElementById("couple")?.scrollIntoView({ behavior: "smooth" });
@@ -66,12 +59,6 @@ const Hero: React.FC<{ config: AppConfig; initialGuestName?: string }> = ({
             <span className="text-accent/30 mx-2 md:mx-6">&</span>
             {config.couple.groom.name}
           </h1>
-
-          {guestName && (
-            <p className="animate-reveal mt-4 font-serif text-xl text-white/80 italic">
-              Kepada Yth. {guestName}
-            </p>
-          )}
 
           <div className="space-y-3 md:space-y-6">
             <p className="font-serif text-xl tracking-widest text-white italic opacity-90 sm:text-2xl md:text-5xl">

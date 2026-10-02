@@ -14,6 +14,14 @@ const Gallery: React.FC<{ config: AppConfig }> = ({ config }) => {
   const [selectedImg, setSelectedImg] = useState<number | null>(null);
   const [isClosing, setIsClosing] = useState(false);
 
+  const getTileClass = (index: number) => {
+    const pattern = index % 8;
+    if (pattern === 0) return "sm:col-span-2 sm:row-span-2";
+    if (pattern === 3) return "sm:row-span-2";
+    if (pattern === 5) return "sm:col-span-2";
+    return "";
+  };
+
   const openLightbox = (index: number) => {
     setSelectedImg(index);
     setIsClosing(false);
@@ -53,10 +61,10 @@ const Gallery: React.FC<{ config: AppConfig }> = ({ config }) => {
   return (
     <section
       id="gallery"
-      className="dark:bg-darkBg bg-white py-24 transition-colors duration-1000 md:py-48"
+      className="dark:bg-darkBg bg-white py-20 transition-colors duration-1000 md:py-36"
     >
       <div className="container mx-auto max-w-7xl px-6">
-        <div className="mb-20 space-y-4 text-center md:mb-32 md:space-y-8">
+        <div className="mb-12 space-y-4 text-center md:mb-20 md:space-y-8">
           <div className="flex items-center justify-center gap-4 opacity-30">
             <div className="bg-accentDark dark:bg-accent h-[1px] w-8 md:w-16"></div>
             <ImageIcon className="h-5 w-5 md:h-8 md:w-8" />
@@ -69,17 +77,17 @@ const Gallery: React.FC<{ config: AppConfig }> = ({ config }) => {
             Momen-momen indah yang terpatri abadi dalam perjalanan cinta kami
           </p>
         </div>
-        <div className="columns-1 gap-6 space-y-6 sm:columns-2 md:gap-10 md:space-y-10 lg:columns-3">
+        <div className="grid auto-rows-[160px] grid-cols-1 gap-4 sm:grid-cols-4 sm:auto-rows-[150px] md:auto-rows-[190px] md:gap-6 lg:auto-rows-[220px]">
           {images.map((src, index) => (
             <div
               key={index}
-              className="group hover:shadow-accent/20 dark:bg-darkSurface relative cursor-pointer overflow-hidden rounded-[1.5rem] border border-slate-100 bg-slate-50 shadow-lg transition-all duration-700 hover:-translate-y-2 md:rounded-[2.5rem] dark:border-white/5"
+              className={`group hover:shadow-accent/20 dark:bg-darkSurface relative cursor-pointer overflow-hidden rounded-[1.25rem] border border-slate-100 bg-slate-50 shadow-lg transition-all duration-700 hover:-translate-y-1 md:rounded-[2rem] dark:border-white/5 ${getTileClass(index)}`}
               onClick={() => openLightbox(index)}
             >
               <img
                 src={src}
                 alt={`Wedding Moment ${index + 1}`}
-                className="h-auto w-full transform object-cover grayscale-[0.2] transition-transform duration-[1.5s] ease-out group-hover:scale-105 group-hover:grayscale-0"
+                className="h-full w-full transform object-cover grayscale-[0.2] transition-transform duration-[1.5s] ease-out group-hover:scale-105 group-hover:grayscale-0"
                 loading="lazy"
               />
               <div className="bg-primary/10 dark:bg-darkBg/40 absolute inset-0 flex items-center justify-center opacity-0 backdrop-blur-[1px] transition-opacity duration-500 group-hover:opacity-100">

@@ -130,7 +130,7 @@ const App: React.FC<{ initialGuestName?: string }> = ({ initialGuestName }) => {
       )}
 
       <FloatingPetals />
-      <Hero config={config} initialGuestName={initialGuestName} />
+      <Hero config={config} />
       {isOpened && <Navbar theme={theme} toggleTheme={toggleTheme} />}
 
       <main className="relative z-10 space-y-0">
